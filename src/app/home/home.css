@@ -2,16 +2,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: max-content;
-  min-height: calc(100vh - 64px); 
-  background-color: #f9f9fb;
-  padding: 3rem 1rem;
+  justify-content: flex-start; /* 👈 alinea arriba, no centrado vertical */
+  min-height: 100vh;
+  padding-top: 4rem; /* 👈 separa del borde superior */
+  background-color: #f8f7fb;
 }
 
 .home-title {
-  font-size: 2.8rem;
-  margin-bottom: 3rem;
+  font-size: 2.6rem;
+  margin-bottom: 2.5rem;
   color: #3f51b5;
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -19,45 +18,45 @@
 
 .home-grid {
   width: 100%;
-  max-width: 1500px;
+  max-width: 1800px; /* más ancho, pero no excesivo */
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 32px;
+  padding: 0 2rem;
 }
 
 .home-card {
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
-  align-items: top;
+  align-items: center;
   justify-content: center;
-  padding: 2rem;
-  border-radius: 12px;
-  background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  text-align: center;
+  height: 100%;
 }
 
 .home-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
 }
 
 .home-icon {
-  font-size: 64px;
+  font-size: 56px;
+  margin-bottom: 16px;
   color: #3f51b5;
-  margin-bottom: 1rem;
 }
 
 mat-card-title {
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.3rem;
   margin-bottom: 0.5rem;
-  color: #333;
+  font-weight: 600;
 }
 
 mat-card-content p {
   font-size: 0.95rem;
   color: #555;
-  text-align: center;
+  line-height: 1.4;
+  margin: 0;
 }
