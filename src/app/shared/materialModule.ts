@@ -3,6 +3,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+
 
 export const MaterialModule = [
   MatToolbarModule,
@@ -10,4 +13,6 @@ export const MaterialModule = [
   MatCardModule,
   MatIconModule,
   MatButtonModule,
+  MatProgressSpinnerModule,
+  MatTableModule
 ] as const;
