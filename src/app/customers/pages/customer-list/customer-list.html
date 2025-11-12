@@ -11,87 +11,73 @@
     <p>No se encontraron clientes. ¡Ingresa tu primer cliente!</p>
   </div>
 
-  <table mat-table [dataSource]="dataSource" *ngIf="!loading && dataSource.length > 0" class="mat-elevation-z8">
-    <!-- Columna Nombre -->
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!-- Nombre -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Nombre</th>
-      <td mat-cell *matCellDef="let character">
-        <a [routerLink]="['/customers', character.id]" class="character-name">
-          {{character.name}}
+      <td mat-cell *matCellDef="let customer">
+        <a [routerLink]="['/customers', customer.id]" class="customer-link">
+          {{ customer.name }}
         </a>
       </td>
     </ng-container>
 
-    <!-- Columna Clase -->
-    <ng-container matColumnDef="characterClass">
-      <th mat-header-cell *matHeaderCellDef>Clase</th>
-      <td mat-cell *matCellDef="let character">{{character.characterClass}}</td>
-    </ng-container>
-
-    <!-- Columna Nivel -->
-    <ng-container matColumnDef="level">
-      <th mat-header-cell *matHeaderCellDef>Nivel</th>
-      <td mat-cell *matCellDef="let character">{{character.level}}</td>
-    </ng-container>
-
-    <!-- Columna PV -->
-    <ng-container matColumnDef="hp">
-      <th mat-header-cell *matHeaderCellDef>PV</th>
-      <td mat-cell *matCellDef="let character">
-        <span class="stat-badge hp">{{character.hp}}</span>
+    <!-- Email -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef>Email</th>
+      <td mat-cell *matCellDef="let customer">
+        {{ customer.email }}
       </td>
     </ng-container>
 
-    <!-- Mana Column -->
-    <ng-container matColumnDef="mana">
-      <th mat-header-cell *matHeaderCellDef>Mana</th>
-      <td mat-cell *matCellDef="let character">
-        <span class="stat-badge mana">{{character.mana}}</span>
-      </td>
-    </ng-container>
-
-    <!-- Columna Ataque -->
-    <ng-container matColumnDef="attack">
-      <th mat-header-cell *matHeaderCellDef>Ataque</th>
-      <td mat-cell *matCellDef="let character">
-        <span class="stat-badge attack">{{character.attack}}</span>
-      </td>
-    </ng-container>
-
-    <!-- Columna Objetos -->
-    <ng-container matColumnDef="items">
-      <th mat-header-cell *matHeaderCellDef>Objetos</th>
-      <td mat-cell *matCellDef="let character">
-        <span *ngIf="character.items && character.items.length > 0" class="items">
-          {{character.items.join(', ')}}
-        </span>
-        <span *ngIf="!character.items || character.items.length === 0" class="no-items">
-          Ninguno
+    <!-- Estado -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Estado</th>
+      <td mat-cell *matCellDef="let customer">
+        <span class="status-badge" [ngClass]="customer.status">
+          {{ customer.status | titlecase }}
         </span>
       </td>
     </ng-container>
 
-    <!-- Columna Acciones -->
+
+
+    <!-- Acciones -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Acciones</th>
-      <td mat-cell *matCellDef="let character" class="actions-cell">
-        <button mat-icon-button [routerLink]="['/character', character.id]" matTooltip="Ver detalles">
+      <td mat-cell *matCellDef="let customer" class="actions-cell">
+        <button mat-icon-button color="primary"
+                [routerLink]="['/customer', customer.id]"
+                matTooltip="Ver detalles">
           <mat-icon>visibility</mat-icon>
         </button>
-        <button mat-icon-button color="primary" [routerLink]="['/character', character.id, 'edit']" matTooltip="Editar">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button color="warn" (click)="deleteCharacter(character.id!)" matTooltip="Eliminar">
+        <button mat-icon-button color="warn"
+                (click)="deleteCustomer(customer.id!)"
+                matTooltip="Eliminar cliente">
           <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-icon-button color="warn"
+                (click)="acceptCustomer(customer.id!)"
+                matTooltip="Aceptar cliente">
+          <mat-icon>done</mat-icon>
+        </button>
+                <button mat-icon-button color="warn"
+                (click)="rejectCustomer(customer.id!)"
+                matTooltip="Aceptar cliente">
+          <mat-icon>block</mat-icon>
         </button>
       </td>
     </ng-container>
 
+    <!-- Header y filas -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-  <button mat-raised-button color="accent" routerLink="/character/new" class="add-button">
-      <mat-icon>person_add</mat-icon>
-      <span>Agregar Personaje</span>
-    </button>
+
+  <button mat-raised-button color="accent" routerLink="/customers/new" class="add-button">
+    <mat-icon>person_add</mat-icon>
+    <span>Agregar Cliente</span>
+  </button>
 </div>

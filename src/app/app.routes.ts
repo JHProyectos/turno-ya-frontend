@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { Bookings } from './bookings/bookings';
-import { Customers } from '../../../obsoletos/customers';
+//import { Customers } from '../../../obsoletos/customers';
 import { CustomerList } from './customers/pages/customer-list/customer-list';
 import { CustomerForm } from './customers/pages/customer-form/customer-form';
 import { CustomerDetail } from './customers/pages/customer-detail/customer-detail';
@@ -16,7 +16,7 @@ export const routes: Routes = [
  // { path: 'booking/new', component: BookingForm },
  // { path: 'booking/:id', component: BookingDetail },
  // { path : 'booking/:id/edit', component: BookingForm },
-  { path: 'customer/new', component: CustomerForm },
+  { path: 'customer/new',  component: CustomerForm },
   { path: 'customer/:id', component: CustomerDetail },
   { path : 'customer/:id/edit', component: CustomerForm },
  // { path: 'service/new', component: ServiceForm },

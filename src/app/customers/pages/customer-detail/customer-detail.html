@@ -1,1 +1,89 @@
-<p>customer-detail works!</p>
+<div class="table-container">
+  <div class="table-header">
+    <h2>Detalles del Cliente</h2>
+    <button
+      mat-raised-button
+      color="primary"
+      [routerLink]="['/customer', customer?.id, 'edit']"
+    >
+      <mat-icon>edit</mat-icon>
+      Editar
+    </button>
+  </div>
+
+  <mat-card *ngIf="customer as c" class="detail-card mat-elevation-z4">
+    <mat-card-header>
+      <mat-card-title>
+        {{ c.first_name }} {{ c.last_name }}
+      </mat-card-title>
+      <mat-card-subtitle>
+        {{ c.role | titlecase }} - Estado:
+        <span
+          [ngClass]="{
+            'status-approved': c.status === 'approved',
+            'status-pending': c.status === 'pending',
+            'status-rejected': c.status === 'rejected'
+          }"
+        >
+          {{ c.status | uppercase }}
+        </span>
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="info-section">
+        <div class="info-row">
+          <span class="info-label">📧 Email:</span>
+          <span class="info-value">{{ c.email }}</span>
+        </div>
+
+        <div class="info-row" *ngIf="c.phone">
+          <span class="info-label">📱 Teléfono:</span>
+          <span class="info-value">{{ c.phone }}</span>
+        </div>
+
+        <div class="info-row" *ngIf="c.birth_date">
+          <span class="info-label">🎂 Fecha de nacimiento:</span>
+          <span class="info-value">{{
+            c.birth_date | date: 'longDate'
+          }}</span>
+        </div>
+
+        <mat-divider class="divider"></mat-divider>
+
+        <div class="info-row">
+          <span class="info-label">🕒 Creado el:</span>
+          <span class="info-value">{{
+            c.created_at | date: 'medium'
+          }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">🔄 Última actualización:</span>
+          <span class="info-value">{{
+            c.updated_at | date: 'medium'
+          }}</span>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions align = "end">
+      <button mat-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver al listado
+      </button>
+      <button mat-button color="warn" (click)="deleteCustomer(c.id.toString())">
+        <mat-icon>delete</mat-icon>
+        Eliminar
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <div *ngIf="!customer && !loading" class="no-data">
+    <p>No se encontró el cliente solicitado.</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-shade">
+    <mat-spinner></mat-spinner>
+  </div>
+</div>
