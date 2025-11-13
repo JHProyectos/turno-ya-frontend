@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+
 import { CustomerList } from './customers/pages/customer-list/customer-list';
 import { CustomerForm } from './customers/pages/customer-form/customer-form';
 import { CustomerDetail } from './customers/pages/customer-detail/customer-detail';
@@ -8,10 +9,12 @@ import { BookingDetail } from './bookings/pages/booking-detail/booking-detail';
 import { Services } from './services/services';
 import { Home } from './home/home';
 import { Component } from '@angular/core';
+import { App } from './app';
 
 export const routes: Routes = [
   { path: '', component: Home },  
   { path: 'bookings', component: BookingList },
+
   { path: 'customers', component: CustomerList },
   { path: 'services', component: Services },
   { path: 'booking/new', component: BookingForm },
