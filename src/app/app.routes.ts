@@ -1,15 +1,15 @@
 import { Routes } from '@angular/router';
 import { Bookings } from './bookings/bookings';
-//import { Customers } from '../../../obsoletos/customers';
 import { CustomerList } from './customers/pages/customer-list/customer-list';
 import { CustomerForm } from './customers/pages/customer-form/customer-form';
 import { CustomerDetail } from './customers/pages/customer-detail/customer-detail';
 import { Services } from './services/services';
 import { Home } from './home/home';
 import { Component } from '@angular/core';
+import { App } from './app';
 
 export const routes: Routes = [
-  { path: '', component: Home },  
+  { path: '', component:  Home},  
   { path: 'bookings', component: Bookings },
   { path: 'customers', component: CustomerList },
   { path: 'services', component: Services },
