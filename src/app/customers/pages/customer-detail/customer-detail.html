@@ -1,11 +1,10 @@
 <div class="table-container">
   <div class="table-header">
     <h2>Detalles del Cliente</h2>
-    <button
+    <button *ngIf="customer as c"
       mat-raised-button
       color="primary"
-      [routerLink]="['/customer', customer?.id, 'edit']"
-    >
+      [routerLink]="['/customer', c.id, 'edit']">
       <mat-icon>edit</mat-icon>
       Editar
     </button>

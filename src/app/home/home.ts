@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./home.css'],
 })
 export class Home {
+navItems: any;
   constructor(private router: Router) {}
 
   sections = [

@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatDivider } from '@angular/material/divider';
+import { MatNavList } from '@angular/material/list';
 
 
 export const MaterialModule = [
@@ -16,5 +17,6 @@ export const MaterialModule = [
   MatButtonModule,
   MatProgressSpinnerModule,
   MatTableModule,
-  MatDivider
+  MatDivider,
+  MatNavList
 ] as const;
