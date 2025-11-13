@@ -18,6 +18,7 @@ export const routes: Routes = [
   { path: 'booking/:id', component: BookingDetail },
   { path : 'booking/:id/edit', component: BookingForm },
   { path: 'customer/new', component: CustomerForm },
+  { path: 'customer/new',  component: CustomerForm },
   { path: 'customer/:id', component: CustomerDetail },
   { path : 'customer/:id/edit', component: CustomerForm },
  // { path: 'service/new', component: ServiceForm },

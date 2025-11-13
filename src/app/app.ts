@@ -1,11 +1,13 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterModule} from '@angular/router';
 import { MaterialModule } from './shared/materialModule';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MaterialModule],
+  imports: [RouterOutlet, MaterialModule, CommonModule, RouterModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

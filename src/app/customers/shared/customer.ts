@@ -1,10 +1,13 @@
 export interface Customer {
-  id?: string;
-  name: string;
-  characterClass?: string;
-  level: number;
-  hp: number;
-  mana: number;
-  attack: number;
-  items: string[];
+  id: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+  password: string,
+  phone?: string;
+  birth_date?: string;
+  status: 'pending' | 'approved' | 'rejected';
+  role: 'customer' | 'professional';
+  created_at: string;
+  updated_at: string;
 }
