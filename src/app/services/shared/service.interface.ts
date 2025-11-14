@@ -3,7 +3,7 @@ export interface Service {
   name: string;
   description: string;
   price: number;
-  duration_minutes: number;
+  duration: number;
   created_at: string;
   updated_at: string;
 }

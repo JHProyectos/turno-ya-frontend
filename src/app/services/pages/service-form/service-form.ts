@@ -32,7 +32,7 @@ export class ServiceForm {
       name: ['', Validators.required],
       description: ['', Validators.required],
       price: ['', Validators.required],
-      duration_minutes: ['', Validators.required],
+      duration: ['', Validators.required],
       created_at: [''],
       updated_at: ['']
     });
@@ -48,7 +48,7 @@ export class ServiceForm {
       name: ['', Validators.required],
       description: ['', Validators.required],
       price: ['', Validators.required],
-      duration_minutes: ['', Validators.required],
+      duration: ['', Validators.required],
       created_at: [''],
       updated_at: ['']
     });
@@ -78,7 +78,7 @@ export class ServiceForm {
             name: service.name,
             description: service.description,
             price: service.price,
-            duration_minutes: service.duration_minutes
+            duration: service.duration
           });
 
           this.loading = false;
@@ -100,7 +100,7 @@ export class ServiceForm {
       const serviceData = {
         ...formValue,
         price: Number(formValue.price),
-        duration_minutes: Number(formValue.duration_minutes)
+        duration: Number(formValue.duration)
       };
 
       let request;

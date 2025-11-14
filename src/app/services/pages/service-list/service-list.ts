@@ -28,9 +28,9 @@ export class ServiceList implements OnInit {
 
   // Mock data for UI testing
   private MOCK_SERVICES: Service[] = [
-    { id: 1, name: 'Corte de pelo', description: 'Corte clásico', price: 15.0, duration_minutes: 30, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-    { id: 2, name: 'Manicure', description: 'Manicure rápida', price: 20.0, duration_minutes: 45, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-    { id: 3, name: 'Masaje', description: 'Masaje relajante 60min', price: 50.0, duration_minutes: 60, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+    { id: 1, name: 'Corte de pelo', description: 'Corte clásico', price: 15.0, duration: 30, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+    { id: 2, name: 'Manicure', description: 'Manicure rápida', price: 20.0, duration: 45, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+    { id: 3, name: 'Masaje', description: 'Masaje relajante 60min', price: 50.0, duration: 60, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
   ];
 
   constructor(private serviceService: ServiceService) {}

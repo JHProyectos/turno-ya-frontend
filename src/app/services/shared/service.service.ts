@@ -18,7 +18,7 @@ export class ServiceService {
       name: s.name || '',
       description: s.description || '',
       price: typeof s.price === 'string' ? parseFloat(s.price) : s.price || 0,
-      duration_minutes: s.duration || s.duration_minutes || 0,
+      duration: s.duration || s.duration || 0,
       created_at: s.created_at || new Date().toISOString(),
       updated_at: s.updated_at || new Date().toISOString(),
     } as Service;

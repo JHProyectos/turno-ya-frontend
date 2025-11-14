@@ -39,8 +39,8 @@
           <!-- Duración en minutos -->
           <mat-form-field appearance="outline">
             <mat-label>Duración (minutos)</mat-label>
-            <input matInput type="number" formControlName="duration_minutes" required>
-            <mat-error *ngIf="serviceForm.get('duration_minutes')?.hasError('required')">
+            <input matInput type="number" formControlName="duration" required>
+            <mat-error *ngIf="serviceForm.get('duration')?.hasError('required')">
               La duración es obligatoria
             </mat-error>
           </mat-form-field>
