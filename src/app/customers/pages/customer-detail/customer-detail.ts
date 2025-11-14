@@ -18,7 +18,8 @@ export class CustomerDetail implements OnInit, OnDestroy {
   loading = true;
   error: string | null = null
   private subscription: Subscription = new Subscription();
-  dataSource: any;
+  dataSource: Customer[] = [];
+
 
   constructor(
     private route: ActivatedRoute,
@@ -50,22 +51,27 @@ export class CustomerDetail implements OnInit, OnDestroy {
     );
   }
 
-  deleteCustomer(id: string): void {
-    if (confirm('¿Seguro que querés eliminar este cliente?')) {
-      this.loading = true;
-      this.customerService.deleteCustomer(id).subscribe({
-        next: () => {
-          this.dataSource = this.dataSource.filter((c: { id: any; }) => String(c.id) !== String(id));
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error('Error eliminando cliente', err);
-          this.error = 'No se pudo eliminar el cliente.';
-          this.loading = false;
-        }
-      });
+ deleteCustomer(id: string): void {
+  if (!confirm('¿Seguro que querés eliminar este cliente?')) return;
+
+  this.loading = true;
+
+  this.customerService.deleteCustomer(id).subscribe({
+    next: () => {
+      this.dataSource = this.dataSource.filter(
+        customer => String(customer.id) !== String(id)
+      );
+      this.loading = false;
+      this.goBack();   // <- volver después de eliminar
+    },
+    error: (err) => {
+      console.error('Error eliminando cliente', err);
+      this.error = 'No se pudo eliminar el cliente.';
+      this.loading = false;
     }
-  }
+  });
+}
+
 
   goBack(): void {
     this.router.navigate(['/customers']);

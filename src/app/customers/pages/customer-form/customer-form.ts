@@ -109,16 +109,6 @@ export class CustomerForm {
     );
   }
 
-  /* onSubmit(): void {
-    if (this.isEditMode) {
-      this.updateExistingCustomer();
-    } else {
-      this.createCustomer();
-    }
-  }*/
-
-
-
   onSubmit(): void {
     if (this.isEditMode) {
       this.updateExistingCustomer();
