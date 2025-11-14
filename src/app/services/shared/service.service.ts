@@ -14,8 +14,13 @@ export class ServiceService {
 
   private normalizeService(s: any): Service {
     return {
-      ...s,
       id: s.id !== undefined && s.id !== null ? Number(s.id) : undefined,
+      name: s.name || '',
+      description: s.description || '',
+      price: typeof s.price === 'string' ? parseFloat(s.price) : s.price || 0,
+      duration_minutes: s.duration || s.duration_minutes || 0,
+      created_at: s.created_at || new Date().toISOString(),
+      updated_at: s.updated_at || new Date().toISOString(),
     } as Service;
   }
 
@@ -24,8 +29,8 @@ export class ServiceService {
     return (arr ?? []).map((s: any) => this.normalizeService(s));
   }
 
-  getServices() { {
-    const url = `${this.apiBase}/all`;
+  getServices() {
+    const url = `${this.apiBase}`;
     return this.http.get<any>(url).pipe(
       map((response) => this.normalizeServicesArray(response)),
       catchError((err) => {
@@ -33,7 +38,7 @@ export class ServiceService {
         return of([]);
       })
     );
-  }}
+  }
   
   addService(service: Omit<Service, 'id'>) {
     const url = `${this.apiBase}`;
