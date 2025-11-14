@@ -24,48 +24,68 @@
 
           <!-- Email -->
           <mat-form-field appearance="outline">
-       
+
             <mat-label>Email</mat-label>
             <input matInput type="email" formControlName="email" required>
           </mat-form-field>
 
+          <!-- Contraseña -->
+          <mat-form-field appearance="outline">
+
+            <mat-label>Contraseña</mat-label>
+            <input matInput type="password" formControlName="password" [required]="!isEditMode">
+          </mat-form-field>
+
           <!-- Nombre -->
           <mat-form-field appearance="outline">
-       
+
             <mat-label>Nombre</mat-label>
             <input matInput type="text" formControlName="first_name" required>
           </mat-form-field>
 
           <!-- Apellido -->
           <mat-form-field appearance="outline">
-          
+
             <mat-label>Apellido</mat-label>
             <input matInput type="text" formControlName="last_name" required>
           </mat-form-field>
 
           <!-- Teléfono -->
           <mat-form-field appearance="outline">
-        
+
             <mat-label>Teléfono</mat-label>
             <input matInput type="text" formControlName="phone">
           </mat-form-field>
 
           <!-- Fecha de nacimiento -->
           <mat-form-field appearance="outline">
-       
+
             <mat-label>Fecha de nacimiento</mat-label>
             <input matInput type="date" formControlName="birth_date">
+           <!-- <input matInput [matDatepicker]="picker" formControlName="birth_date">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>-->
+          </mat-form-field>
+
+          <!-- Rol -->
+          <mat-form-field appearance="outline">
+
+            <mat-label>Rol</mat-label>
+            <mat-select formControlName="role" required>
+              <mat-option value="customer">Cliente</mat-option>
+              <mat-option value="admin">Profesional</mat-option>
+            </mat-select>
           </mat-form-field>
 
           <!-- Status -->
           <mat-form-field appearance="outline">
- 
+
             <mat-label>Estado</mat-label>
-            <input matInput type="text" formControlName="status">
-            <mat-select>
-              <mat-option value="one">Pending</mat-option>
-              <mat-option value="two">Accepted</mat-option>
-              <mat-option value="two">Rejected</mat-option>
+            <mat-select formControlName="status">
+              <mat-option value="pendin">Pending</mat-option>
+              <mat-option value="accepted">Accepted</mat-option>
+              <mat-option value="rejected">Rejected</mat-option>
             </mat-select>
           </mat-form-field>
 
@@ -82,6 +102,7 @@
           {{ isEditMode ? 'Guardar Cambios' : 'Crear Cliente' }}
         </button>
       </div>
+      <div>{{ customerForm.invalid ? 'INVALIDO' : 'VALIDO' }}</div>
 
     </form>
 

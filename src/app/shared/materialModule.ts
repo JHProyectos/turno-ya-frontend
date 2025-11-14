@@ -12,6 +12,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatDivider } from '@angular/material/divider';
 import { MatNavList } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
+import { MatDatepicker } from '@angular/material/datepicker';
 
 
 
@@ -29,5 +30,6 @@ export const MaterialModule = [
   MatOptionModule,
   MatDivider,
   MatNavList,
-  MatInputModule
+  MatInputModule,
+  MatDatepicker
 ] as const;
