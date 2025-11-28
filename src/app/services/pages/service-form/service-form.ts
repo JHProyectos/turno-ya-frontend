@@ -6,14 +6,16 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ServiceService } from '../../shared/service.service';
 
+import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-service-form',
-  imports: [MaterialModule, ReactiveFormsModule],
+  imports: [CommonModule, MaterialModule, ReactiveFormsModule],
   templateUrl: './service-form.html',
   styleUrl: './service-form.css',
 })
 export class ServiceForm {
- 
+
   serviceForm!: FormGroup;
   isEditMode = false;
   serviceId: string | null = null;
@@ -28,13 +30,10 @@ export class ServiceForm {
     private serviceService: ServiceService) {
 
     this.serviceForm = this.fb.group({
-      id: [''],
       name: ['', Validators.required],
       description: ['', Validators.required],
       price: ['', Validators.required],
       duration: ['', Validators.required],
-      created_at: [''],
-      updated_at: ['']
     });
   }
 
@@ -44,13 +43,10 @@ export class ServiceForm {
 
   ngOnInit(): void {
     this.serviceForm = this.fb.group({
-      id: [''],
       name: ['', Validators.required],
       description: ['', Validators.required],
       price: ['', Validators.required],
-      duration: ['', Validators.required],
-      created_at: [''],
-      updated_at: ['']
+      duration: ['', Validators.required]
     });
 
     this.serviceId = this.route.snapshot.paramMap.get('id');
@@ -92,6 +88,11 @@ export class ServiceForm {
   }
 
   onSubmit(): void {
+    console.log('onSubmit called');
+    console.log('Form valid:', this.serviceForm.valid);
+    console.log('Form value:', this.serviceForm.value);
+    console.log('Form errors:', this.serviceForm.errors);
+
     if (this.serviceForm.valid) {
       this.loading = true;
       this.error = null;
@@ -100,8 +101,12 @@ export class ServiceForm {
       const serviceData = {
         ...formValue,
         price: Number(formValue.price),
-        duration: Number(formValue.duration)
+        duration: Number(formValue.duration),
+        category_id: 1, // Default category
+        image_url: null // Default image
       };
+
+      console.log('Sending service data:', serviceData);
 
       let request;
 
@@ -114,7 +119,11 @@ export class ServiceForm {
       this.subscription.add(
         request.subscribe({
           next: (service) => {
+            console.log('Service saved successfully:', service);
             if (!service) {
+              // This might happen if the service returns null for some reason, 
+              // but with the new error handling, errors should go to the error block.
+              this.error = 'Unexpected error: No data returned.';
               this.loading = false;
               return;
             }
@@ -122,11 +131,20 @@ export class ServiceForm {
             this.router.navigate(['/services', service.id]);
           },
           error: (err: any) => {
-            this.error = `Error ${this.isEditMode ? 'updating' : 'adding'} service. Please try again.`;
+            console.error('Error saving service:', err);
+            this.error = `Error ${this.isEditMode ? 'updating' : 'adding'} service. ${err.message || 'Please try again.'}`;
             this.loading = false;
           }
         })
       );
+    } else {
+      console.warn('Form is invalid');
+      Object.keys(this.serviceForm.controls).forEach(key => {
+        const controlErrors = this.serviceForm.get(key)?.errors;
+        if (controlErrors) {
+          console.warn('Key control: ' + key + ', errors: ' + JSON.stringify(controlErrors));
+        }
+      });
     }
   }
 

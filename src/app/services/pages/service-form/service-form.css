@@ -77,3 +77,12 @@ mat-card-actions {
 button mat-icon {
   margin-right: 8px;
 }
+
+.error-message {
+  background-color: #f44336;
+  color: white;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  font-weight: 500;
+}

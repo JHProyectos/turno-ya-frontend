@@ -2,12 +2,16 @@
   <div class="table-header">
     <h2>{{ isEditMode ? 'Editar Servicio' : 'Nuevo Servicio' }}</h2>
   </div>
-  
+
   <mat-card class="form-card mat-elevation-z4">
     <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" class="service-form">
       <mat-card-content>
 
         <div class="form-grid">
+
+          <div *ngIf="error" class="error-message">
+            {{ error }}
+          </div>
 
           <!-- Nombre -->
           <mat-form-field appearance="outline">
@@ -55,8 +59,7 @@
           Cancelar
         </button>
 
-        <button mat-raised-button color="primary" type="submit"
-                [disabled]="!serviceForm.valid">
+        <button mat-raised-button color="primary" type="submit" [disabled]="!serviceForm.valid">
           <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
           {{ isEditMode ? 'Actualizar' : 'Crear' }}
         </button>
@@ -66,8 +69,8 @@
   </mat-card>
 
   @if (loading) {
-    <div class="loading-shade">
-      <mat-spinner></mat-spinner>
-    </div>
+  <div class="loading-shade">
+    <mat-spinner></mat-spinner>
+  </div>
   }
 </div>
