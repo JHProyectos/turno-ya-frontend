@@ -1,0 +1,9 @@
+.snackbar-error {
+  background-color: #d32f2f !important; /* rojo */
+  color: white !important;
+}
+
+.snackbar-success {
+  background-color: #2e7d32 !important; /* verde */
+  color: white !important;
+}
