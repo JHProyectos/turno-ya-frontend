@@ -75,10 +75,12 @@
         color="primary"
         type="submit"
         [disabled]="bookingForm.invalid">
+        <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
   {{ isEditMode ? "Guardar Cambios" : "Crear Reserva" }}
 </button>
 
       </div>
+      <div>{{ bookingForm.invalid ? 'INVALIDO' : 'VALIDO' }}</div>
 
     </form>
 

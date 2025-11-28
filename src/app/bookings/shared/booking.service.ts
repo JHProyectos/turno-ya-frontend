@@ -7,6 +7,7 @@ import { map, catchError } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
+
 export class BookingService {
   private apiBase = 'http://localhost:3000/api/bookings';
 
@@ -21,11 +22,12 @@ export class BookingService {
 
   private normalizeBookingsArray(payload: any): Booking[] {
     const arr = Array.isArray(payload) ? payload : (payload?.data ?? []);
-    return (arr ?? []).map((c: any) => this.normalizeBooking(c));
+    return (arr ?? []).map((b: any) => this.normalizeBooking(b));
   }
 
   getBookings(): Observable<Booking[]> {
-  return this.http.get<any>(this.apiBase).pipe(
+  const url = `${this.apiBase}/all`;
+  return this.http.get<any>(url).pipe(
     map(response => this.normalizeBookingsArray(response)),
     catchError(err => {
       console.error('[BookingService] getBookings error', err);
