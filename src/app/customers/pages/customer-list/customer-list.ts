@@ -64,35 +64,49 @@ export class CustomerList implements OnInit {
     });
   }
 
-  deleteCustomer(id: string): void {
+  deleteCustomer(id: number): void {
 
-    if (!confirm('¿Seguro que querés eliminar este cliente?')) return;
+  if (!confirm('¿Seguro que querés eliminar este cliente?')) return;
 
-    this.loading = true;
+  this.loading = true;
 
-    this.customerService.deleteCustomer(id).subscribe({
-      next: () => {
-        this.showSuccess('Cliente eliminado con éxito.');
-        this.loadCustomers();
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error eliminando cliente', err);
+  this.customerService.deleteCustomer(String(id)).subscribe(result => {
+    this.loading = false;
 
-        if (err.status === 404) {
-          this.showError('Cliente no encontrado.');
-        } else if (err.status === 409) {
-          this.showError('No se puede eliminar: el cliente tiene reservas asociadas.');
-          //this.error = 'No se puede eliminar: el cliente tiene reservas asociadas.';
-        } else {
-          this.showError('Error al eliminar el cliente.');
-          //this.error = 'Error al eliminar el cliente.';
-        }
+    if (result.success && result.status === 204) {
+      this.dataSource = this.dataSource.filter(c => c.id !== id);
 
-        this.loading = false;
-      }
-    });
-  }
+      this.snackBar.open('Cliente eliminado correctamente', 'Cerrar', {
+        duration: 3000
+      });
+      return;
+    }
+
+    if (result.status === 409) {
+      this.snackBar.open(
+        'No se puede eliminar: el cliente tiene reservas asociadas.',
+        'Cerrar',
+        { duration: 4000 }
+      );
+      return;
+    }
+
+    if (result.status === 404) {
+      this.snackBar.open(
+        'El cliente no existe.',
+        'Cerrar',
+        { duration: 4000 }
+      );
+      return;
+    }
+
+    this.snackBar.open(
+      'Error al eliminar cliente.',
+      'Cerrar',
+      { duration: 4000 }
+    );
+  });
+}
 
 
 

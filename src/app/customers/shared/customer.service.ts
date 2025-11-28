@@ -81,17 +81,27 @@ export class CustomerService {
   }
 
   // DELETE /api/customers/:id
-  deleteCustomer(id: string): Observable<boolean> {
-    const url = `${this.apiBase}/${id}`;
-    return this.http.delete<void>(url).pipe(
-      map(() => true),
-      catchError(err => {
-        console.error('[CustomerService] deleteCustomer error', err);
-        // devolver false para que el caller sepa que falló
-        return of(false);
-      })
-    );
-  }
+  deleteCustomer(id: string): Observable<{ success: boolean; status: number }> {
+  const url = `${this.apiBase}/${id}`;
+
+  return this.http.delete(url, { observe: 'response' }).pipe(
+    map(res => ({
+      success: res.status === 204,  // éxito real solo si es 204
+      status: res.status
+    })),
+    catchError(err => {
+      console.error('[CustomerService] deleteCustomer error', err);
+
+      return of({
+        success: false,
+        status: err.status   // 409, 404, 500, etc.
+      });
+    })
+  );
+}
+
+
+  
 
   /**
    * Nota sobre autenticación:
