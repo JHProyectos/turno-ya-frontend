@@ -3,7 +3,7 @@
   <button *ngIf="booking as b"
           mat-raised-button
           color="primary"
-          [routerLink]="['/booking', b.id, 'edit']">
+          [routerLink]="['/bookings', b.id, 'edit']">
     <mat-icon>edit</mat-icon>
     Editar
   </button>
@@ -36,7 +36,7 @@
       <!-- Tratamiento -->
       <div class="info-row">
         <span class="info-label">Tratamiento:</span>
-        <span class="info-value">{{ b.treatment_id.join(', ') }}</span>
+        <span class="info-value">{{ b.treatment_id}}</span>
       </div>
       <!-- Fecha -->
       <div class="info-row" *ngIf="b.booking_date">

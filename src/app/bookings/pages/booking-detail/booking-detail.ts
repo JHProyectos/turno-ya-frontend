@@ -19,6 +19,7 @@ export class BookingDetail implements OnInit, OnDestroy{
   error: string | null = null
   private subscription: Subscription = new Subscription();
   dataSource: any;
+  
 
   constructor(
     private route: ActivatedRoute,

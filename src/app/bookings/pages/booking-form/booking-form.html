@@ -1,1 +1,91 @@
-<p>booking-form works!</p>
+<div class="page-wrapper">
+
+  <header class="page-header">
+    <div>
+      <h1>{{ isEditMode ? 'Editar Reserva' : 'Nueva Reserva' }}</h1>
+      <p class="subtitle">Completa la información de la reserva para continuar</p>
+    </div>
+
+    <button mat-stroked-button color="primary" (click)="onCancel()">
+      <mat-icon>arrow_back</mat-icon>
+      Volver
+    </button>
+  </header>
+
+  <mat-card class="modern-card mat-elevation-z3">
+
+    <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()" class="modern-form">
+
+      <!-- Datos Reserva -->
+      <section class="form-section">
+        <h2 class="section-title">Datos de la Reserva</h2>
+
+        <div class="form-grid">
+
+          <!-- Cliente -->
+          <mat-form-field appearance="outline">
+            <mat-label>Cliente ID</mat-label>
+            <input matInput type="number" formControlName="client_id" required>
+          </mat-form-field>
+
+          <!-- Servicio -->
+          <mat-form-field appearance="outline">
+            <mat-label>Servicio ID</mat-label>
+            <input matInput type="number" formControlName="service_id" required>
+          </mat-form-field>
+
+          <!-- Estado -->
+          <mat-form-field appearance="outline">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="booking_status">
+              <mat-option value="pending">Pendiente</mat-option>
+              <mat-option value="confirmed">Confirmada</mat-option>
+              <mat-option value="cancelled">Cancelada</mat-option>
+              <mat-option value="completed">Completada</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Fecha -->
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha</mat-label>
+            <input matInput type="date" formControlName="booking_date">
+          </mat-form-field>
+
+          <!-- Hora Inicio -->
+          <mat-form-field appearance="outline">
+            <mat-label>Hora Inicio</mat-label>
+            <input matInput type="time" formControlName="start_time">
+          </mat-form-field>
+
+          <!-- Hora Fin -->
+          <mat-form-field appearance="outline">
+            <mat-label>Hora Finalización</mat-label>
+            <input matInput type="time" formControlName="end_time">
+          </mat-form-field>
+
+        </div>
+      </section>
+
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="onCancel()">
+          Cancelar
+        </button>
+
+<button mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="bookingForm.invalid">
+  {{ isEditMode ? "Guardar Cambios" : "Crear Reserva" }}
+</button>
+
+      </div>
+
+    </form>
+
+  </mat-card>
+
+  <div *ngIf="loading" class="loading-shade">
+    <mat-spinner></mat-spinner>
+  </div>
+
+</div>
