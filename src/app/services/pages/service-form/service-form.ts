@@ -102,8 +102,8 @@ export class ServiceForm {
         ...formValue,
         price: Number(formValue.price),
         duration: Number(formValue.duration),
-        category_id: 1, // Default category
-        image_url: null // Default image
+        category_id: 1,
+        image_url: null
       };
 
       console.log('Sending service data:', serviceData);
@@ -121,8 +121,7 @@ export class ServiceForm {
           next: (service) => {
             console.log('Service saved successfully:', service);
             if (!service) {
-              // This might happen if the service returns null for some reason, 
-              // but with the new error handling, errors should go to the error block.
+
               this.error = 'Unexpected error: No data returned.';
               this.loading = false;
               return;
