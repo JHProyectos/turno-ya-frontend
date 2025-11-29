@@ -2,61 +2,88 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* 👈 alinea arriba, no centrado vertical */
   min-height: 100vh;
-  padding-top: 4rem; /* 👈 separa del borde superior */
-  background-color: #f8f7fb;
+  padding: 5rem 1rem 4rem;
+  background: linear-gradient(to bottom, #f5f9ff 0%, #e3f2fd 100%);
 }
 
 .home-title {
-  font-size: 2.6rem;
-  margin-bottom: 2.5rem;
-  color: #3f51b5;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #0d47a1;
+  margin-bottom: 3rem;
+  text-align: center;
 }
 
 .home-grid {
   width: 100%;
-  max-width: 1000px; /* más ancho, pero no excesivo */
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 32px;
-  padding: 0 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .home-card {
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
   text-align: center;
-  height: 100%;
+  padding: 2rem;
+  cursor: pointer;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: white;
 }
 
 .home-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+  background: #fafcff;
 }
 
 .home-icon {
-  font-size: 56px;
-  margin-bottom: 16px;
-  color: #3f51b5;
+  font-size: 64px !important;
+  width: 80px !important;
+  height: 80px !important;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 mat-card-title {
-  font-size: 1.3rem;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  color: #1a3e72 !important;
+  margin: 0.5rem 0 !important;
 }
 
 mat-card-content p {
-  font-size: 0.95rem;
-  color: #555;
-  line-height: 1.4;
   margin: 0;
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+
+@media (max-width: 960px) {
+  .home-grid {
+    cols: 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-grid {
+    cols: 1;
+  }
+
+  .home-title {
+    font-size: 2.3rem;
+  }
+
+  .home-card {
+    padding: 1.8rem;
+  }
 }
