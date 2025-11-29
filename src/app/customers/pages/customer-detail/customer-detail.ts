@@ -6,6 +6,7 @@ import { Customer } from '../../shared/customer';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { CommonModule, DatePipe, TitleCasePipe, UpperCasePipe } from '@angular/common';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-customer-detail',
@@ -24,7 +25,8 @@ export class CustomerDetail implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private customerService: CustomerService) { }
+    private customerService: CustomerService,
+   private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -56,21 +58,47 @@ export class CustomerDetail implements OnInit, OnDestroy {
 
   this.loading = true;
 
-  this.customerService.deleteCustomer(id).subscribe({
-    next: () => {
-      this.dataSource = this.dataSource.filter(
-        customer => String(customer.id) !== String(id)
-      );
-      this.loading = false;
-      this.goBack();   // <- volver después de eliminar
-    },
-    error: (err) => {
-      console.error('Error eliminando cliente', err);
-      this.error = 'No se pudo eliminar el cliente.';
-      this.loading = false;
+  this.customerService.deleteCustomer(id).subscribe(result => {
+    this.loading = false;
+
+
+    if (result.success && result.status === 204) {
+      this.snackBar.open('Cliente eliminado correctamente', 'Cerrar', {
+        duration: 3000
+      });
+      this.goBack(); 
+      return;
     }
+
+
+    if (result.status === 409) {
+      this.snackBar.open(
+        'No se puede eliminar: el cliente tiene reservas asociadas.',
+        'Cerrar',
+        { duration: 4000 }
+      );
+      return;
+    }
+
+
+    if (result.status === 404) {
+      this.snackBar.open(
+        'El cliente no existe.',
+        'Cerrar',
+        { duration: 4000 }
+      );
+      this.goBack(); 
+      return;
+    }
+
+    this.snackBar.open(
+      'Error al eliminar cliente.',
+      'Cerrar',
+      { duration: 4000 }
+    );
   });
 }
+
 
 
   goBack(): void {
