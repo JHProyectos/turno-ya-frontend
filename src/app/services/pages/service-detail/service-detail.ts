@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialModule } from '../../../shared/materialModule';
 import { Subscription } from 'rxjs';
 import { ServiceService } from '../../shared/service.service';
@@ -23,7 +24,8 @@ export class ServiceDetail implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private serviceService: ServiceService) { }
+    private serviceService: ServiceService,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -40,7 +42,7 @@ export class ServiceDetail implements OnInit, OnDestroy {
           this.service = data;
           this.loading = false;
         },
-         error: (err: any) => {
+        error: (err: any) => {
           this.error = 'Error al cargar el servicio. Por favor, inténtalo de nuevo.';
           this.loading = false;
         },
@@ -55,14 +57,25 @@ export class ServiceDetail implements OnInit, OnDestroy {
       this.loading = true;
       this.serviceService.deleteService(id.toString()).subscribe({
         next: () => {
-          this.dataSource = this.dataSource.filter((s: { id: any; }) => String(s.id) !== String(id));
           this.loading = false;
+          this.snackBar.open('Servicio eliminado correctamente', 'Cerrar', {
+            duration: 3000,
+          });
           this.router.navigate(['/services']);
         },
         error: (err) => {
           console.error('Error eliminando servicio', err);
-          this.error = 'No se pudo eliminar el servicio.';
           this.loading = false;
+          if (err.status === 409) {
+            this.snackBar.open('No se puede eliminar: el servicio tiene reservas asociadas.', 'Cerrar', {
+              duration: 5000,
+            });
+          } else {
+            this.error = 'No se pudo eliminar el servicio.';
+            this.snackBar.open('Error al eliminar el servicio', 'Cerrar', {
+              duration: 3000,
+            });
+          }
         }
       });
     }

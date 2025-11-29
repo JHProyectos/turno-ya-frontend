@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Service } from '../../shared/service.interface';
@@ -33,7 +34,7 @@ export class ServiceList implements OnInit {
     { id: 3, name: 'Masaje', description: 'Masaje relajante 60min', price: 50.0, duration: 60, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
   ];
 
-  constructor(private serviceService: ServiceService) {}
+  constructor(private serviceService: ServiceService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.loadServices();
@@ -74,11 +75,23 @@ export class ServiceList implements OnInit {
         next: () => {
           this.dataSource = this.dataSource.filter(s => String(s.id) !== String(id));
           this.loading = false;
+          this.snackBar.open('Servicio eliminado correctamente', 'Cerrar', {
+            duration: 3000,
+          });
         },
         error: (err) => {
           console.error('Error eliminando servicio', err);
-          this.error = 'No se pudo eliminar el servicio.';
           this.loading = false;
+          if (err.status === 409) {
+            this.snackBar.open('No se puede eliminar: el servicio tiene reservas asociadas.', 'Cerrar', {
+              duration: 5000,
+            });
+          } else {
+            this.error = 'No se pudo eliminar el servicio.';
+            this.snackBar.open('Error al eliminar el servicio', 'Cerrar', {
+              duration: 3000,
+            });
+          }
         }
       });
     }
