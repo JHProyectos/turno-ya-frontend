@@ -14,14 +14,6 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./booking-list.css'],
 })
 export class BookingListComponent implements OnInit {
-  rejectBooking(id: number) {
-    throw new Error('Method not implemented.');
-    console.log("RECHAZAR reserva", id);
-  }
-  acceptBooking(id: number) {
-    throw new Error('Method not implemented.');
-    console.log("ACEPTAR reserva", id);
-  }
 
   displayedColumns: string[] = ['client_id', 'service_id', 'booking_date', 'start_time', 'booking_status', 'actions'];
   dataSource: Booking[] = [];
@@ -49,12 +41,12 @@ export class BookingListComponent implements OnInit {
     });
   }
 
-  deleteBooking(id: number): void {
+  deleteBooking(id: string): void {
     if (confirm('¿Seguro que querés eliminar esta reserva?')) {
       this.loading = true;
       this.bookingService.deleteBooking(id).subscribe({
         next: () => {
-          this.dataSource = this.dataSource.filter(b => Number(b.id) !== Number(id));
+          this.dataSource = this.dataSource.filter(b => String(b.id) !== String(id));
           this.loading = false;
         },
         error: (err) => {

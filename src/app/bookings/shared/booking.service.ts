@@ -16,7 +16,7 @@ export class BookingService {
   private normalizeBooking(b: any): Booking {
     return {
       ...b,
-      id: b.id !== undefined && b.id !== null ? Number(b.id) : undefined
+      id: b.id !== undefined && b.id !== null ? String(b.id) : undefined
     } as Booking;
   }
 
@@ -26,7 +26,7 @@ export class BookingService {
   }
 
   getBookings(): Observable<Booking[]> {
-  const url = `${this.apiBase}/all`;
+  const url = `${this.apiBase}`;
   return this.http.get<any>(url).pipe(
     map(response => this.normalizeBookingsArray(response)),
     catchError(err => {
@@ -37,7 +37,7 @@ export class BookingService {
 }
 
 
-  getBooking(id: number): Observable<Booking | null> {
+  getBooking(id: string): Observable<Booking | null> {
     const url = `${this.apiBase}/${id}`;
     return this.http.get<any>(url).pipe(
       map(res => {
@@ -62,7 +62,7 @@ export class BookingService {
     );
   }
 
-  updateBooking(id: number, booking: Partial<Booking>): Observable<Booking | null> {
+  updateBooking(id: string, booking: Partial<Booking>): Observable<Booking | null> {
     const url = `${this.apiBase}/${id}`;
     return this.http.put<any>(url, booking).pipe(
       map(res => this.normalizeBooking(res?.data ?? res)),
@@ -73,7 +73,7 @@ export class BookingService {
     );
   }
 
-  deleteBooking(id: number): Observable<boolean> {
+  deleteBooking(id: string): Observable<boolean> {
     const url = `${this.apiBase}/${id}`;
     return this.http.delete<void>(url).pipe(
       map(() => true),

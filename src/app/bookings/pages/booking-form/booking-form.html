@@ -82,6 +82,16 @@
       </div>
       <div>{{ bookingForm.invalid ? 'INVALIDO' : 'VALIDO' }}</div>
 
+      <button *ngIf="isEditMode"
+        mat-raised-button
+        color="warn"
+        type="button"
+        (click)="deleteBooking()">
+    <mat-icon>delete</mat-icon>
+    Eliminar
+</button>
+
+
     </form>
 
   </mat-card>

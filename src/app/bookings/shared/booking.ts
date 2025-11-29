@@ -1,5 +1,5 @@
 export interface Booking {
-  id?: number;
+  id: number;
   client_id: number;
   service_id: number;
   booking_date: Date;

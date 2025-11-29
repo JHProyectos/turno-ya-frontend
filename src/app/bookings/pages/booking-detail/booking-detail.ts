@@ -13,27 +13,28 @@ import { CommonModule, DatePipe, TitleCasePipe, UpperCasePipe } from '@angular/c
   templateUrl: './booking-detail.html',
   styleUrl: './booking-detail.css',
 })
-export class BookingDetail implements OnInit, OnDestroy{
+export class BookingDetail implements OnInit, OnDestroy {
   booking: Booking | null = null;
   loading = true;
   error: string | null = null
   private subscription: Subscription = new Subscription();
-  dataSource: any;
-  
+  dataSource: Booking[] = [];
+
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private bookingService: BookingService) { }
 
-  ngOnInit(): void {
+ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-    this.loadBooking(Number(id));
+      this.loadBooking(id);
     }
   }
 
-  loadBooking(id: number): void {
+
+  loadBooking(id: string): void {
     this.loading = true;
     this.subscription.add(
       this.bookingService.getBooking(id).subscribe({
@@ -51,22 +52,28 @@ export class BookingDetail implements OnInit, OnDestroy{
     );
   }
 
-  deleteBooking(id: number): void {
-    if (confirm('¿Seguro que querés eliminar esta reserva?')) {
-      this.loading = true;
-      this.bookingService.deleteBooking(id).subscribe({
-        next: () => {
-          this.dataSource = this.dataSource.filter((b: { id: any; }) => Number(b.id) !== Number(id));
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error('Error eliminando la reserva', err);
-          this.error = 'No se pudo eliminar la reserva.';
-          this.loading = false;
-        }
-      });
+ deleteBooking(id: string): void {
+  if (!id) return;
+  if (!confirm('¿Seguro que querés eliminar esta reserva?')) return;
+
+  this.loading = true;
+
+  this.bookingService.deleteBooking(id).subscribe({
+    next: () => {
+      this.dataSource = this.dataSource.filter(
+        booking => String(booking.id) !== String(id)
+      );
+      this.loading = false;
+      this.goBack();
+    },
+    error: (err) => {
+      console.error('Error eliminando reserva', err);
+      this.error = 'No se pudo eliminar la reserva.';
+      this.loading = false;
     }
-  }
+  });
+}
+
 
   goBack(): void {
     this.router.navigate(['/bookings']);

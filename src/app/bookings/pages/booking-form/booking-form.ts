@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MaterialModule } from '../../../shared/materialModule';
 import { Booking } from '../../shared/booking';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BookingService } from '../../shared/booking.service';
@@ -18,7 +18,7 @@ export class BookingForm {
 
   bookingForm!: FormGroup;
   isEditMode = false;
-  bookingId: number | null = null;
+  bookingId: string | null = null;
   loading = false;
   error: string | null = null;
   private subscription = new Subscription();
@@ -28,20 +28,7 @@ export class BookingForm {
     private route: ActivatedRoute,
     private router: Router,
     private bookingService: BookingService
-  ) {
-    this.bookingForm = this.fb.group({
-      client_id: ['', Validators.required],
-      service_id: ['', Validators.required],
-      booking_date: ['', Validators.required],
-      start_time: ['', Validators.required],
-      end_time: [''],
-      booking_status: ['pending', Validators.required]
-    });
-  }
-
-  get items() {
-    return this.bookingForm.get('items') as FormArray;
-  }
+  ) {}
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -54,22 +41,11 @@ export class BookingForm {
       booking_date: ['', Validators.required],
       start_time: ['', Validators.required],
       end_time: [''],
-      booking_status: ['pending', Validators.required],
-      treatment_id: ['', Validators.required]
+      booking_status: ['pending', Validators.required]
     });
 
-    const idParam = this.route.snapshot.paramMap.get('id');
-
-    if (!idParam || idParam === 'new') {
-      this.bookingId = null;
-    } else {
-      this.bookingId = Number(idParam);
-
-      if (!isNaN(this.bookingId)) {
-        this.isEditMode = true;
-        this.loadBooking(this.bookingId);
-      }
-    }
+    this.bookingId = this.route.snapshot.paramMap.get('id');
+    if (this.bookingId === 'new') this.bookingId = null;
 
     if (this.bookingId) {
       this.isEditMode = true;
@@ -77,34 +53,25 @@ export class BookingForm {
     }
   }
 
-  loadBooking(id: number): void {
+  loadBooking(id: string): void {
     this.loading = true;
     this.subscription.add(
       this.bookingService.getBooking(id).subscribe({
         next: (booking: Booking | null) => {
-          if (!booking) { //si booking es null
-            this.loading = false;
-            return;
+          if (booking) {
+            this.bookingForm.patchValue({
+              client_id: booking.client_id,
+              service_id: booking.service_id,
+              booking_date: new Date(booking.booking_date).toISOString().split('T')[0],
+              start_time: booking.start_time,
+              end_time: booking.end_time,
+              booking_status: booking.booking_status
+            });
           }
-
-          const formattedDate = booking.booking_date
-            ? new Date(booking.booking_date).toISOString().split('T')[0]
-            : '';
-
-          this.bookingForm.patchValue({
-            client_id: booking.client_id,
-            service_id: booking.service_id,
-            booking_date: formattedDate,
-            start_time: booking.start_time,
-            end_time: booking.end_time,
-            booking_status: booking.booking_status,
-            treatment_id: booking.treatment_id
-          });
-
           this.loading = false;
         },
-        error: (err: any) => {
-          this.error = 'Error cargando. Reintente.';
+        error: () => {
+          this.error = 'Error cargando reserva';
           this.loading = false;
         }
       })
@@ -112,116 +79,77 @@ export class BookingForm {
   }
 
   onSubmit(): void {
-      if (this.bookingForm.invalid) return;
+    if (this.bookingForm.invalid) return;
 
-  this.loading = true;
-  this.error = null;
-
-  const bookingData = {
-    ...this.bookingForm.value,
-    treatment_id: 1
-  };
-
-  let request;
     if (this.isEditMode) {
       this.updateExistingBooking();
     } else {
       this.createBooking();
     }
-    if (this.bookingForm.valid) {
-      this.loading = true;
-      this.error = null;
-      const formValue = this.bookingForm.value;
-      const bookingData = {
-        ...formValue,
-        bookingData: formValue.bookingData || {},
-      };
+  }
 
-      let request;
+  createBooking(): void {
+    this.loading = true;
+    const data = this.bookingForm.value;
+    console.log('[CREATE] Enviando:', data);
 
-      if (this.isEditMode && this.bookingId) {
-        request = this.bookingService.updateBooking(this.bookingId, bookingData);
-      } else {
-        request = this.bookingService.addBooking(bookingData as Omit<Booking, 'id'>);
-      }
+    this.subscription.add(
+      this.bookingService.addBooking(data).subscribe({
+        next: (booking) => {
+          this.loading = false;
+          if (booking) this.router.navigate(['/bookings', booking.id]);
+        },
+        error: () => {
+          this.error = 'Error creando reserva';
+          this.loading = false;
+        }
+      })
+    );
+  }
 
-      this.subscription.add(
-        request.subscribe({
-          next: (booking) => {
-            if (!booking) { //si booking es null
-              this.loading = false;
-              return;
-            }
-            this.loading = false;
-            this.router.navigate(['/bookings', booking.id]);
-          },
-          error: (err: any) => {
-            this.error = `Error ${this.isEditMode ? 'updating' : 'adding'} booking. Please try again.`;
-            this.loading = false;
-          }
-        })
-      );
-    }
+  updateExistingBooking(): void {
+    if (!this.bookingId) return;
+
+    this.loading = true;
+    const data = this.bookingForm.value;
+    console.log('[UPDATE] ID:', this.bookingId, 'Data:', data);
+
+    this.subscription.add(
+      this.bookingService.updateBooking(this.bookingId, data).subscribe({
+        next: (booking) => {
+          this.loading = false;
+          if (booking) this.router.navigate(['/bookings', booking.id]);
+        },
+        error: () => {
+          this.error = 'Error actualizando reserva';
+          this.loading = false;
+        }
+      })
+    );
+  }
+
+  deleteBooking(): void {
+    if (!this.bookingId) return;
+
+    if (!confirm('¿Seguro que deseas eliminar la reserva?')) return;
+
+    this.loading = true;
+
+    this.subscription.add(
+      this.bookingService.deleteBooking(this.bookingId).subscribe({
+        next: (ok) => {
+          this.loading = false;
+          if (ok) this.router.navigate(['/bookings']);
+        },
+        error: () => {
+          this.error = 'Error eliminando reserva';
+          this.loading = false;
+        }
+      })
+    );
   }
 
   onCancel(): void {
     this.router.navigate(['/bookings']);
-  }
-
-  createBooking(): void {
-    if (this.bookingForm.invalid) return;
-
-    this.loading = true;
-    const bookingData = this.bookingForm.value;
-
-    this.subscription.add(
-      this.bookingService.addBooking(bookingData).subscribe({
-        next: (booking) => {
-          if (!booking) {
-            this.loading = false;
-            return;
-          }
-          this.loading = false;
-          this.router.navigate(['/bookings', booking.id]);
-        },
-        error: () => {
-          this.error = 'Error creando reserva. Intenta nuevamente.';
-          this.loading = false;
-        }
-      })
-    );
-  }
-
-
-  updateExistingBooking(): void {
-    if (this.bookingForm.invalid || !this.bookingId) return;
-
-    this.loading = true;
-    const bookingData = this.bookingForm.value;
-
-    this.subscription.add(
-      this.bookingService.updateBooking(this.bookingId, bookingData).subscribe({
-        next: (booking) => {
-          if (!booking) {
-            this.loading = false;
-            return;
-          }
-          this.loading = false;
-          this.router.navigate(['/bookings', booking.id]);
-        },
-        error: () => {
-          this.error = 'Error actualizando reserva. Intenta nuevamente.';
-          this.loading = false;
-        }
-      })
-    );
-  }
-
-
-  rejectBooking(arg0: any) {
-    throw new Error('Method not implemented.');
-  }
-  acceptBooking(arg0: any) {
-    throw new Error('Method not implemented.');
   }
 }
