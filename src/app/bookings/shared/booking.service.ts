@@ -36,7 +36,6 @@ export class BookingService {
   );
 }
 
-
   getBooking(id: string): Observable<Booking | null> {
     const url = `${this.apiBase}/${id}`;
     return this.http.get<any>(url).pipe(
