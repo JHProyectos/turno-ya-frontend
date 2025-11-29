@@ -56,17 +56,21 @@ export class CustomerService {
     );
   }
 
-  // POST /api/customers (si tu back expone POST en otra ruta, ajustá)
+  // POST /api/customers
   addCustomer(customer: Omit<Customer, 'id'>): Observable<Customer | null> {
-    const url = `${this.apiBase}`;
-    return this.http.post<any>(url, customer).pipe(
-      map(res => this.normalizeCustomer(res?.data ?? res)),
-      catchError(err => {
-        console.error('[CustomerService] addCustomer error', err);
-        return of(null);
-      })
-    );
-  }
+  const url = `${this.apiBase}`;
+  return this.http.post<any>(url, customer).pipe(
+    map(res => {
+      if (!res || !res.data) return null;
+      return this.normalizeCustomer(res.data); 
+    }),
+    catchError(err => {
+      console.error('[CustomerService] addCustomer error', err);
+      return of(null);
+    })
+  );
+}
+
 
   // PUT /api/customers/:id
   updateCustomer(id: string, customer: Partial<Customer>): Observable<Customer | null> {

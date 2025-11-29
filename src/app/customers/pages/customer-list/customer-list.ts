@@ -34,7 +34,7 @@ export class CustomerList implements OnInit {
   private showError(message: string): void {
     this.snackBar.open(message, 'Cerrar', {
       duration: 3500,
-      panelClass: ['snackbar-error']  // opcional si querés estilo
+      panelClass: ['snackbar-error']  
     });
   }
   private showSuccess(message: string): void {
@@ -64,7 +64,7 @@ export class CustomerList implements OnInit {
     });
   }
 
-  deleteCustomer(id: number): void {
+ deleteCustomer(id: number): void {
 
   if (!confirm('¿Seguro que querés eliminar este cliente?')) return;
 
@@ -75,38 +75,24 @@ export class CustomerList implements OnInit {
 
     if (result.success && result.status === 204) {
       this.dataSource = this.dataSource.filter(c => c.id !== id);
-
-      this.snackBar.open('Cliente eliminado correctamente', 'Cerrar', {
-        duration: 3000
-      });
+      this.showSuccess('Cliente eliminado correctamente');
       return;
     }
 
     if (result.status === 409) {
-      this.snackBar.open(
-        'No se puede eliminar: el cliente tiene reservas asociadas.',
-        'Cerrar',
-        { duration: 4000 }
-      );
+      this.showError('No se puede eliminar: el cliente tiene reservas asociadas.');
       return;
     }
 
     if (result.status === 404) {
-      this.snackBar.open(
-        'El cliente no existe.',
-        'Cerrar',
-        { duration: 4000 }
-      );
+      this.showError('El cliente no existe.');
       return;
     }
 
-    this.snackBar.open(
-      'Error al eliminar cliente.',
-      'Cerrar',
-      { duration: 4000 }
-    );
+    this.showError('Error al eliminar cliente.');
   });
 }
+
 
 
 

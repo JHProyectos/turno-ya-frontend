@@ -6,6 +6,7 @@ import { last, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerService } from '../../shared/customer.service';
 import { CommonModule } from '@angular/common';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-customer-form',
@@ -26,7 +27,9 @@ export class CustomerForm {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private customerService: CustomerService) {
+    private customerService: CustomerService,
+    private snackBar: MatSnackBar
+  ) {
 
     this.customerForm = this.fb.group({
       id: [''],
@@ -42,7 +45,18 @@ export class CustomerForm {
       updated_at: ['']
     });
   }
-
+  private showError(message: string): void {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 3000,
+      panelClass: ['snackbar-error']
+    });
+  }
+  private showSuccess(message: string): void {
+    this.snackBar.open(message, 'OK', {
+      duration: 3000,
+      panelClass: ['snackbar-success']
+    });
+  }
   get items() {
     return this.customerForm.get('items') as FormArray;
   }
@@ -82,7 +96,7 @@ export class CustomerForm {
     this.subscription.add(
       this.customerService.getCustomer(id).subscribe({
         next: (customer: Customer | null) => {
-          if (!customer) { //si customer es null
+          if (!customer) {
             this.loading = false;
             return;
           }
@@ -93,7 +107,7 @@ export class CustomerForm {
             last_name: customer.last_name,
             password: customer.password,
             phone: customer.phone,
-            birth_date: customer.birth_date ? customer.birth_date.split('T')[0]  : '',
+            birth_date: customer.birth_date ? customer.birth_date.split('T')[0] : '',
             status: customer.status,
             role: customer.role
           });
@@ -110,46 +124,45 @@ export class CustomerForm {
   }
 
   onSubmit(): void {
-    if (this.isEditMode) {
-      this.updateExistingCustomer();
-    } else {
-      this.createCustomer();
-    }
-    if (this.customerForm.valid) {
-      this.loading = true;
-      this.error = null;
-      const formValue = this.customerForm.value;
-      const customerData = {
-        ...formValue,
-        customerData: formValue.customerData || {},
-      };
+  if (this.customerForm.invalid) return;
 
-      let request;
+  this.loading = true;
+  this.error = null;
 
-      if (this.isEditMode && this.customerId) {
-        request = this.customerService.updateCustomer(this.customerId, customerData);
-      } else {
-        request = this.customerService.addCustomer(customerData as Omit<Customer, 'id'>);
-      }
+  const formValue = this.customerForm.value;
+  const customerData = {
+    ...formValue,
+    customerData: formValue.customerData || {},
+  };
 
-      this.subscription.add(
-        request.subscribe({
-          next: (customer) => {
-            if (!customer) { //si customer es null
-              this.loading = false;
-              return;
-            }
-            this.loading = false;
-            this.router.navigate(['/customers', customer.id]);
-          },
-          error: (err: any) => {
-            this.error = `Error ${this.isEditMode ? 'updating' : 'adding'} customer. Please try again.`;
-            this.loading = false;
-          }
-        })
-      );
-    }
+  let request;
+  if (this.isEditMode && this.customerId) {
+    request = this.customerService.updateCustomer(this.customerId, customerData);
+  } else {
+    request = this.customerService.addCustomer(customerData as Omit<Customer, 'id'>);
   }
+
+  this.subscription.add(
+    request.subscribe({
+      next: (customer) => {
+        if (!customer) {
+          this.showError('Error creando/actualizando cliente');
+          this.loading = false;
+          return;
+        }
+        this.showSuccess(`Cliente ${this.isEditMode ? 'actualizado' : 'creado'} correctamente.`);
+        this.loading = false;
+        this.router.navigate(['/customers', customer.id]);
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.showError(`Error ${this.isEditMode ? 'actualizando' : 'creando'} cliente.`);
+        this.loading = false;
+      }
+    })
+  );
+}
+
 
   onCancel(): void {
     this.router.navigate(['/customers']);
@@ -166,13 +179,15 @@ export class CustomerForm {
         next: (customer) => {
           if (!customer) {
             this.loading = false;
+            this.showError('Error creando cliente. Intenta nuevamente.');
             return;
           }
           this.loading = false;
-          this.router.navigate(['/customers', customer.id]);
+          this.showSuccess('Cliente creado correctamente.');
+          this.router.navigate(['/customers', customer.id]);         
         },
         error: () => {
-          this.error = 'Error creando cliente. Intenta nuevamente.';
+          this.showError('Error creando cliente. Intenta nuevamente.');
           this.loading = false;
         }
       })
@@ -191,13 +206,15 @@ export class CustomerForm {
         next: (customer) => {
           if (!customer) {
             this.loading = false;
+            this.showError('Error actualizando cliente. Intenta nuevamente.');
             return;
           }
           this.loading = false;
+          this.showSuccess('Cliente actualizado correctamente.');
           this.router.navigate(['/customers', customer.id]);
         },
         error: () => {
-          this.error = 'Error actualizando cliente. Intenta nuevamente.';
+          this.showError('Error actualizando cliente. Intenta nuevamente.');
           this.loading = false;
         }
       })
