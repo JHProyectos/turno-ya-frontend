@@ -13,7 +13,7 @@
             {{ error }}
           </div>
 
-          <!-- Nombre -->
+
           <mat-form-field appearance="outline">
             <mat-label>Nombre</mat-label>
             <input matInput type="text" formControlName="name" required>
@@ -22,7 +22,7 @@
             </mat-error>
           </mat-form-field>
 
-          <!-- Descripción -->
+
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Descripción</mat-label>
             <textarea matInput formControlName="description" required></textarea>
@@ -31,7 +31,7 @@
             </mat-error>
           </mat-form-field>
 
-          <!-- Precio -->
+
           <mat-form-field appearance="outline">
             <mat-label>Precio</mat-label>
             <input matInput type="number" formControlName="price" required>
@@ -40,7 +40,7 @@
             </mat-error>
           </mat-form-field>
 
-          <!-- Duración en minutos -->
+
           <mat-form-field appearance="outline">
             <mat-label>Duración (minutos)</mat-label>
             <input matInput type="number" formControlName="duration" required>
@@ -68,9 +68,7 @@
     </form>
   </mat-card>
 
-  @if (loading) {
-  <div class="loading-shade">
+  <div class="loading-shade" *ngIf="loading">
     <mat-spinner></mat-spinner>
   </div>
-  }
 </div>

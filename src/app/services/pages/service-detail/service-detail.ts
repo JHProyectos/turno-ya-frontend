@@ -67,7 +67,7 @@ export class ServiceDetail implements OnInit, OnDestroy {
           console.error('Error eliminando servicio', err);
           this.loading = false;
           if (err.status === 409) {
-            this.snackBar.open('No se puede eliminar: el servicio tiene reservas asociadas.', 'Cerrar', {
+            this.snackBar.open('No se puede eliminar: el servicio tiene turnos asociados.', 'Cerrar', {
               duration: 5000,
             });
           } else {
