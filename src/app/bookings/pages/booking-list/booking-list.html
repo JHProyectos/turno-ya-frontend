@@ -1,14 +1,14 @@
 
 <div class="table-container">
   <div class="table-header">
-    <h2>Reservas</h2>
+    <h2>Turnos</h2>
   </div>
   <div *ngIf="loading" class="loading-shade">
     <mat-spinner></mat-spinner>
   </div>
 
   <div *ngIf="!loading && dataSource.length === 0" class="no-data">
-    <p>No se encontraron reservas. ¡Ingresa tu primera reserva!</p>
+    <p>No se encontraron turnos. ¡Ingresa tu primea turno!</p>
   </div>
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">

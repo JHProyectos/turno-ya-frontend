@@ -71,7 +71,7 @@ export class BookingForm {
           this.loading = false;
         },
         error: () => {
-          this.error = 'Error cargando reserva';
+          this.error = 'Error cargando turno';
           this.loading = false;
         }
       })
@@ -100,7 +100,7 @@ export class BookingForm {
           if (booking) this.router.navigate(['/bookings', booking.id]);
         },
         error: () => {
-          this.error = 'Error creando reserva';
+          this.error = 'Error creando turno';
           this.loading = false;
         }
       })
@@ -121,7 +121,7 @@ export class BookingForm {
           if (booking) this.router.navigate(['/bookings', booking.id]);
         },
         error: () => {
-          this.error = 'Error actualizando reserva';
+          this.error = 'Error actualizando turno';
           this.loading = false;
         }
       })
@@ -131,7 +131,7 @@ export class BookingForm {
   deleteBooking(): void {
     if (!this.bookingId) return;
 
-    if (!confirm('¿Seguro que deseas eliminar la reserva?')) return;
+    if (!confirm('¿Seguro que deseas eliminar el turno?')) return;
 
     this.loading = true;
 
@@ -142,7 +142,7 @@ export class BookingForm {
           if (ok) this.router.navigate(['/bookings']);
         },
         error: () => {
-          this.error = 'Error eliminando reserva';
+          this.error = 'Error eliminando turno';
           this.loading = false;
         }
       })

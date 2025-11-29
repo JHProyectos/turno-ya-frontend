@@ -43,7 +43,7 @@ ngOnInit(): void {
           this.loading = false;
         },
          error: (err: any) => {
-          this.error = 'Error al cargar la reserva. Por favor, inténtalo de nuevo.';
+          this.error = 'Error al cargar el turno. Por favor, inténtalo de nuevo.';
           this.loading = false;
         },
         complete: () => {
@@ -54,7 +54,7 @@ ngOnInit(): void {
 
  deleteBooking(id: string): void {
   if (!id) return;
-  if (!confirm('¿Seguro que querés eliminar esta reserva?')) return;
+  if (!confirm('¿Seguro que querés eliminar este turno?')) return;
 
   this.loading = true;
 
@@ -67,8 +67,8 @@ ngOnInit(): void {
       this.goBack();
     },
     error: (err) => {
-      console.error('Error eliminando reserva', err);
-      this.error = 'No se pudo eliminar la reserva.';
+      console.error('Error eliminando turno', err);
+      this.error = 'No se pudo eliminar el turno.';
       this.loading = false;
     }
   });

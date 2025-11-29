@@ -35,14 +35,14 @@ export class BookingListComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading bookings', err);
-        this.error = 'Error al cargar las reservas.';
+        this.error = 'Error al cargar los turnos.';
         this.loading = false;
       }
     });
   }
 
   deleteBooking(id: string): void {
-    if (confirm('¿Seguro que querés eliminar esta reserva?')) {
+    if (confirm('¿Seguro que querés eliminar este turno?')) {
       this.loading = true;
       this.bookingService.deleteBooking(id).subscribe({
         next: () => {
@@ -50,8 +50,8 @@ export class BookingListComponent implements OnInit {
           this.loading = false;
         },
         error: (err) => {
-          console.error('Error eliminando la reserva', err);
-          this.error = 'No se pudo eliminar la reserva.';
+          console.error('Error eliminando el turno', err);
+          this.error = 'No se pudo eliminar el turno.';
           this.loading = false;
         },
       });

@@ -2,8 +2,8 @@
 
   <header class="page-header">
     <div>
-      <h1>{{ isEditMode ? 'Editar Reserva' : 'Nueva Reserva' }}</h1>
-      <p class="subtitle">Completa la información de la reserva para continuar</p>
+      <h1>{{ isEditMode ? 'Editar Turno' : 'Nuevo Turno' }}</h1>
+      <p class="subtitle">Completa la información del turno para continuar</p>
     </div>
 
     <button mat-stroked-button color="primary" (click)="onCancel()">
@@ -18,7 +18,7 @@
 
       <!-- Datos Reserva -->
       <section class="form-section">
-        <h2 class="section-title">Datos de la Reserva</h2>
+        <h2 class="section-title">Datos del turno</h2>
 
         <div class="form-grid">
 
@@ -39,9 +39,9 @@
             <mat-label>Estado</mat-label>
             <mat-select formControlName="booking_status">
               <mat-option value="pending">Pendiente</mat-option>
-              <mat-option value="confirmed">Confirmada</mat-option>
-              <mat-option value="cancelled">Cancelada</mat-option>
-              <mat-option value="completed">Completada</mat-option>
+              <mat-option value="confirmed">Confirmado</mat-option>
+              <mat-option value="cancelled">Cancelado</mat-option>
+              <mat-option value="completed">Completado</mat-option>
             </mat-select>
           </mat-form-field>
 
@@ -76,7 +76,7 @@
         type="submit"
         [disabled]="bookingForm.invalid">
         <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
-  {{ isEditMode ? "Guardar Cambios" : "Crear Reserva" }}
+  {{ isEditMode ? "Guardar Cambios" : "Crear Turno" }}
 </button>
 
       </div>

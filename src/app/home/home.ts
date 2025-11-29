@@ -16,10 +16,10 @@ navItems: any;
 
   sections = [
     {
-      title: 'Reservas',
+      title: 'Turnos',
       path: '/bookings',
       icon: 'event',
-      description: 'Gestioná tus reservas y citas fácilmente.',
+      description: 'Gestioná tus turnos fácilmente.',
     },
     {
       title: 'Clientes',

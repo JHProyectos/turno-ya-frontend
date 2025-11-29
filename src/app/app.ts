@@ -22,7 +22,7 @@ export class App implements OnInit {
 
   sections = [
     {
-      title: 'Reservas',
+      title: 'Turnos',
       path: '/bookings',
      },
     {
