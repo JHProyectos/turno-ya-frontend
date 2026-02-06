@@ -19,11 +19,11 @@
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
       <!-- Cliente -->
-      <ng-container matColumnDef="client_id">
+      <ng-container matColumnDef="client_name">
         <th mat-header-cell *matHeaderCellDef>Cliente</th>
         <td mat-cell *matCellDef="let booking">
           <a [routerLink]="['/bookings', booking.id]" class="booking-id">
-            {{booking.client_id }}
+            {{booking.client_name }}
           </a>
         </td>
       </ng-container>

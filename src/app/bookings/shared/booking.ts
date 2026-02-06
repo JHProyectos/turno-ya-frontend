@@ -1,6 +1,7 @@
 export interface Booking {
   id: number;
   client_id: number;
+  client_name: string;
   service_id: number;
   booking_date: Date;
   start_time: string;

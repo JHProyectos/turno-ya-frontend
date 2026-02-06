@@ -36,7 +36,7 @@ export class BookingForm {
 
   ngOnInit(): void {
     this.bookingForm = this.fb.group({
-      client_id: ['', Validators.required],
+      client_name: ['', Validators.required],
       service_id: ['', Validators.required],
       booking_date: ['', Validators.required],
       start_time: ['', Validators.required],
@@ -60,7 +60,7 @@ export class BookingForm {
         next: (booking: Booking | null) => {
           if (booking) {
             this.bookingForm.patchValue({
-              client_id: booking.client_id,
+              client_name: booking.client_name,
               service_id: booking.service_id,
               booking_date: new Date(booking.booking_date).toISOString().split('T')[0],
               start_time: booking.start_time,
