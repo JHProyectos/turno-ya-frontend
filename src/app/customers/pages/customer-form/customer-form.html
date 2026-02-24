@@ -17,77 +17,124 @@
 
         <div class="form-grid">
 
-          <!-- Email -->
+          <!-- EMAIL -->
           <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
-            <input matInput type="email" formControlName="email" required>
+            <input matInput type="email" formControlName="email">
+
             <mat-error *ngIf="customerForm.get('email')?.hasError('required')">
               El email es obligatorio
             </mat-error>
+
             <mat-error *ngIf="customerForm.get('email')?.hasError('email')">
               Email inválido
             </mat-error>
+
+            <mat-error *ngIf="customerForm.get('email')?.hasError('backend')">
+              {{ customerForm.get('email')?.getError('backend') }}
+            </mat-error>
           </mat-form-field>
 
-          <!-- Contraseña -->
+          <!-- PASSWORD -->
           <mat-form-field appearance="outline">
             <mat-label>Contraseña</mat-label>
-            <input matInput type="password" formControlName="password" [required]="!isEditMode">
+            <input matInput
+                   type="password"
+                   formControlName="password"
+                   [required]="!isEditMode"
+                   [disabled]="isEditMode">
+
             <mat-error *ngIf="customerForm.get('password')?.hasError('required') && !isEditMode">
               La contraseña es obligatoria
             </mat-error>
+
+            <mat-error *ngIf="customerForm.get('password')?.hasError('minlength')">
+              Debe tener al menos 8 caracteres
+            </mat-error>
+
+            <mat-error *ngIf="customerForm.get('password')?.hasError('pattern')">
+              Debe incluir mayúscula, minúscula y número
+            </mat-error>
+
+            <mat-error *ngIf="customerForm.get('password')?.hasError('backend')">
+              {{ customerForm.get('password')?.getError('backend') }}
+            </mat-error>
           </mat-form-field>
 
-          <!-- Nombre -->
+          <!-- NOMBRE -->
           <mat-form-field appearance="outline">
             <mat-label>Nombre</mat-label>
-            <input matInput type="text" formControlName="first_name" required>
+            <input matInput type="text" formControlName="first_name">
+
             <mat-error *ngIf="customerForm.get('first_name')?.hasError('required')">
               El nombre es obligatorio
             </mat-error>
+
+            <mat-error *ngIf="customerForm.get('first_name')?.hasError('minlength')">
+              Debe tener al menos 2 caracteres
+            </mat-error>
+
+            <mat-error *ngIf="customerForm.get('first_name')?.hasError('maxlength')">
+              No puede exceder 50 caracteres
+            </mat-error>
+
+            <mat-error *ngIf="customerForm.get('first_name')?.hasError('pattern')">
+              Solo puede contener letras
+            </mat-error>
+
+            <mat-error *ngIf="customerForm.get('first_name')?.hasError('backend')">
+              {{ customerForm.get('first_name')?.getError('backend') }}
+            </mat-error>
           </mat-form-field>
 
-          <!-- Apellido -->
+          <!-- APELLIDO -->
           <mat-form-field appearance="outline">
             <mat-label>Apellido</mat-label>
-            <input matInput type="text" formControlName="last_name" required>
+            <input matInput type="text" formControlName="last_name">
+
             <mat-error *ngIf="customerForm.get('last_name')?.hasError('required')">
               El apellido es obligatorio
             </mat-error>
-          </mat-form-field>
 
-          <!-- Teléfono -->
-          <mat-form-field appearance="outline">
-            <mat-label>Teléfono</mat-label>
-            <input matInput type="text" formControlName="phone">
-          </mat-form-field>
+            <mat-error *ngIf="customerForm.get('last_name')?.hasError('minlength')">
+              Debe tener al menos 2 caracteres
+            </mat-error>
 
-          <!-- Fecha de nacimiento -->
-          <mat-form-field appearance="outline">
-            <mat-label>Fecha de nacimiento</mat-label>
-            <input matInput type="date" formControlName="birth_date">
-          </mat-form-field>
+            <mat-error *ngIf="customerForm.get('last_name')?.hasError('maxlength')">
+              No puede exceder 50 caracteres
+            </mat-error>
 
-          <!-- Rol -->
-          <mat-form-field appearance="outline">
-            <mat-label>Rol</mat-label>
-            <mat-select formControlName="role" required>
-              <mat-option value="customer">Cliente</mat-option>
-              <mat-option value="admin">Profesional</mat-option>
-            </mat-select>
-            <mat-error *ngIf="customerForm.get('role')?.hasError('required')">
-              El rol es obligatorio
+            <mat-error *ngIf="customerForm.get('last_name')?.hasError('pattern')">
+              Solo puede contener letras
+            </mat-error>
+
+            <mat-error *ngIf="customerForm.get('last_name')?.hasError('backend')">
+              {{ customerForm.get('last_name')?.getError('backend') }}
             </mat-error>
           </mat-form-field>
 
-          <!-- Status -->
+          <!-- TELEFONO -->
           <mat-form-field appearance="outline">
-            <mat-label>Estado</mat-label>
-            <mat-select formControlName="status">
-              <mat-option value="pending">Pendiente</mat-option>
-              <mat-option value="approved">Aprobado</mat-option>
-              <mat-option value="rejected">Rechazado</mat-option>
-            </mat-select>
+            <mat-label>Teléfono</mat-label>
+            <input matInput type="text" formControlName="phone">
+
+            <mat-error *ngIf="customerForm.get('phone')?.hasError('pattern')">
+              El teléfono debe tener entre 8 y 15 dígitos
+            </mat-error>
+
+            <mat-error *ngIf="customerForm.get('phone')?.hasError('backend')">
+              {{ customerForm.get('phone')?.getError('backend') }}
+            </mat-error>
+          </mat-form-field>
+
+          <!-- FECHA -->
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha de nacimiento</mat-label>
+            <input matInput type="date" formControlName="birth_date">
+
+            <mat-error *ngIf="customerForm.get('birth_date')?.hasError('backend')">
+              {{ customerForm.get('birth_date')?.getError('backend') }}
+            </mat-error>
           </mat-form-field>
 
         </div>
@@ -100,7 +147,11 @@
           Cancelar
         </button>
 
-        <button mat-raised-button color="primary" type="submit" [disabled]="!customerForm.valid || loading">
+        <button mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="!customerForm.valid || loading">
+
           <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
           {{ isEditMode ? 'Guardar Cambios' : 'Crear Cliente' }}
         </button>

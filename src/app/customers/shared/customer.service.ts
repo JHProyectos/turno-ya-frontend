@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Customer } from './customer';
+import { CreateCustomerDTO, UpdateCustomerDTO } from './customer.dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomerService {
+
   private apiBase = 'http://localhost:3000/api/customers';
 
   constructor(private http: HttpClient) {}
 
-  // normaliza un customer convirtiendo id a string si existe
   private normalizeCustomer(c: any): Customer {
     return {
       ...c,
@@ -20,32 +21,24 @@ export class CustomerService {
     } as Customer;
   }
 
-  // normaliza un array de customers
   private normalizeCustomersArray(payload: any): Customer[] {
-    // backend puede devolver: array directo, o { data: array }
     const arr = Array.isArray(payload) ? payload : (payload?.data ?? []);
     return (arr ?? []).map((c: any) => this.normalizeCustomer(c));
   }
 
-  // GET /api/customers/all
   getCustomers(): Observable<Customer[]> {
-    const url = `${this.apiBase}/all`;
-    return this.http.get<any>(url).pipe(
-      map(response => this.normalizeCustomersArray(response)),
+    return this.http.get<any>(`${this.apiBase}/all`).pipe(
+      map(res => this.normalizeCustomersArray(res)),
       catchError(err => {
         console.error('[CustomerService] getCustomers error', err);
-        // no tirar error duro; devolvemos array vacío para que la UI lo maneje
         return of([]);
       })
     );
   }
 
-  // GET /api/customers/:id  <-- si tu back no la expone, esto puede 404
   getCustomer(id: string): Observable<Customer | null> {
-    const url = `${this.apiBase}/${id}`;
-    return this.http.get<any>(url).pipe(
+    return this.http.get<any>(`${this.apiBase}/${id}`).pipe(
       map(res => {
-        // si el back devuelve { data: customer } o customer directo
         const payload = res?.data ?? res;
         return payload ? this.normalizeCustomer(payload) : null;
       }),
@@ -56,65 +49,47 @@ export class CustomerService {
     );
   }
 
-  // POST /api/customers
-  addCustomer(customer: Omit<Customer, 'id'>): Observable<Customer | null> {
-  const url = `${this.apiBase}`;
-  return this.http.post<any>(url, customer).pipe(
-    map(res => {
-      if (!res || !res.data) return null;
-      return this.normalizeCustomer(res.data); 
-    }),
-    catchError(err => {
-      console.error('[CustomerService] addCustomer error', err);
-      return of(null);
-    })
-  );
-}
-
-
-  // PUT /api/customers/:id
-  updateCustomer(id: string, customer: Partial<Customer>): Observable<Customer | null> {
-    const url = `${this.apiBase}/${id}`;
-    return this.http.put<any>(url, customer).pipe(
-      map(res => this.normalizeCustomer(res?.data ?? res)),
+  // ✅ CORREGIDO
+  addCustomer(data: CreateCustomerDTO): Observable<Customer | null> {
+    return this.http.post<any>(this.apiBase, data).pipe(
+      map(res => {
+        const payload = res?.data ?? res;
+        return payload ? this.normalizeCustomer(payload) : null;
+      }),
       catchError(err => {
-        console.error('[CustomerService] updateCustomer error', err);
-        return of(null);
+        console.error('[CustomerService] addCustomer error', err);
+        throw err; // importante: no ocultar error si querés manejar validaciones
       })
     );
   }
 
-  // DELETE /api/customers/:id
+  // ✅ CORREGIDO
+  updateCustomer(id: string, data: UpdateCustomerDTO): Observable<Customer | null> {
+    return this.http.put<any>(`${this.apiBase}/${id}`, data).pipe(
+      map(res => {
+        const payload = res?.data ?? res;
+        return payload ? this.normalizeCustomer(payload) : null;
+      }),
+      catchError(err => {
+        console.error('[CustomerService] updateCustomer error', err);
+        throw err;
+      })
+    );
+  }
+
   deleteCustomer(id: string): Observable<{ success: boolean; status: number }> {
-  const url = `${this.apiBase}/${id}`;
-
-  return this.http.delete(url, { observe: 'response' }).pipe(
-    map(res => ({
-      success: res.status === 204,  // éxito real solo si es 204
-      status: res.status
-    })),
-    catchError(err => {
-      console.error('[CustomerService] deleteCustomer error', err);
-
-      return of({
-        success: false,
-        status: err.status   // 409, 404, 500, etc.
-      });
-    })
-  );
-}
-
-
-  
-
-  /**
-   * Nota sobre autenticación:
-   * Si tus rutas están protegidas por authMiddleware (como en el back),
-   * necesitás enviar el token en Authorization header. Ejemplo:
-   *
-   * const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-   * this.http.get(url, { headers })
-   *
-   * Podés adaptar los métodos arriba para inyectar headers si hace falta.
-   */
+    return this.http.delete(`${this.apiBase}/${id}`, { observe: 'response' }).pipe(
+      map(res => ({
+        success: res.status === 204,
+        status: res.status
+      })),
+      catchError(err => {
+        console.error('[CustomerService] deleteCustomer error', err);
+        return of({
+          success: false,
+          status: err.status
+        });
+      })
+    );
+  }
 }
