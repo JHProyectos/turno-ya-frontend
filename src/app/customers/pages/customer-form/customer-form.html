@@ -12,6 +12,7 @@
       <mat-card-content>
 
         <div *ngIf="error" class="error-message">
+          <mat-icon>error</mat-icon>
           {{ error }}
         </div>
 
@@ -20,7 +21,12 @@
           <!-- EMAIL -->
           <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
-            <input matInput type="email" formControlName="email">
+            <input matInput 
+                   type="email" 
+                   formControlName="email"
+                   placeholder="ejemplo@mail.com">
+
+            <mat-icon matPrefix>email</mat-icon>
 
             <mat-error *ngIf="customerForm.get('email')?.hasError('required')">
               El email es obligatorio
@@ -41,10 +47,15 @@
             <input matInput
                    type="password"
                    formControlName="password"
-                   [required]="!isEditMode"
-                   [disabled]="isEditMode">
+                   placeholder="********">
 
-            <mat-error *ngIf="customerForm.get('password')?.hasError('required') && !isEditMode">
+            <mat-icon matPrefix>lock</mat-icon>
+
+            <mat-hint *ngIf="!isEditMode">
+              Mínimo 8 caracteres, incluir mayúscula, minúscula y número
+            </mat-hint>
+
+            <mat-error *ngIf="!isEditMode && customerForm.get('password')?.hasError('required')">
               La contraseña es obligatoria
             </mat-error>
 
@@ -64,7 +75,12 @@
           <!-- NOMBRE -->
           <mat-form-field appearance="outline">
             <mat-label>Nombre</mat-label>
-            <input matInput type="text" formControlName="first_name">
+            <input matInput 
+                   type="text" 
+                   formControlName="first_name"
+                   placeholder="Juan">
+
+            <mat-icon matPrefix>person</mat-icon>
 
             <mat-error *ngIf="customerForm.get('first_name')?.hasError('required')">
               El nombre es obligatorio
@@ -82,6 +98,10 @@
               Solo puede contener letras
             </mat-error>
 
+            <mat-error *ngIf="customerForm.get('first_name')?.hasError('repeatedChars')">
+              {{ customerForm.get('first_name')?.getError('repeatedChars') }}
+            </mat-error>
+
             <mat-error *ngIf="customerForm.get('first_name')?.hasError('backend')">
               {{ customerForm.get('first_name')?.getError('backend') }}
             </mat-error>
@@ -90,7 +110,12 @@
           <!-- APELLIDO -->
           <mat-form-field appearance="outline">
             <mat-label>Apellido</mat-label>
-            <input matInput type="text" formControlName="last_name">
+            <input matInput 
+                   type="text" 
+                   formControlName="last_name"
+                   placeholder="Pérez">
+
+            <mat-icon matPrefix>badge</mat-icon>
 
             <mat-error *ngIf="customerForm.get('last_name')?.hasError('required')">
               El apellido es obligatorio
@@ -108,18 +133,31 @@
               Solo puede contener letras
             </mat-error>
 
+            <mat-error *ngIf="customerForm.get('last_name')?.hasError('repeatedChars')">
+              {{ customerForm.get('last_name')?.getError('repeatedChars') }}
+            </mat-error>
+
             <mat-error *ngIf="customerForm.get('last_name')?.hasError('backend')">
               {{ customerForm.get('last_name')?.getError('backend') }}
             </mat-error>
           </mat-form-field>
 
-          <!-- TELEFONO -->
+          <!-- TELÉFONO -->
           <mat-form-field appearance="outline">
             <mat-label>Teléfono</mat-label>
-            <input matInput type="text" formControlName="phone">
+            <input matInput 
+                   type="tel" 
+                   formControlName="phone"
+                   (input)="onPhoneInput($event)"
+                   placeholder="+1234567890"
+                   maxlength="16">
+
+            <mat-icon matPrefix>phone</mat-icon>
+
+            <mat-hint>Formato: +1234567890 (10-15 dígitos)</mat-hint>
 
             <mat-error *ngIf="customerForm.get('phone')?.hasError('pattern')">
-              El teléfono debe tener entre 8 y 15 dígitos
+              El teléfono debe tener entre 10 y 15 dígitos
             </mat-error>
 
             <mat-error *ngIf="customerForm.get('phone')?.hasError('backend')">
@@ -127,10 +165,17 @@
             </mat-error>
           </mat-form-field>
 
-          <!-- FECHA -->
+          <!-- FECHA DE NACIMIENTO -->
           <mat-form-field appearance="outline">
             <mat-label>Fecha de nacimiento</mat-label>
-            <input matInput type="date" formControlName="birth_date">
+            <input matInput 
+                   type="date" 
+                   formControlName="birth_date"
+                   max="{{ today }}">
+
+            <mat-icon matPrefix>cake</mat-icon>
+
+            <mat-hint>Opcional</mat-hint>
 
             <mat-error *ngIf="customerForm.get('birth_date')?.hasError('backend')">
               {{ customerForm.get('birth_date')?.getError('backend') }}
@@ -142,7 +187,10 @@
       </mat-card-content>
 
       <mat-card-actions align="end">
-        <button mat-button type="button" (click)="onCancel()">
+        <button mat-button 
+                type="button" 
+                (click)="onCancel()"
+                [disabled]="loading">
           <mat-icon>cancel</mat-icon>
           Cancelar
         </button>
@@ -150,9 +198,15 @@
         <button mat-raised-button
                 color="primary"
                 type="submit"
-                [disabled]="!customerForm.valid || loading">
+                [disabled]="customerForm.invalid || loading">
 
-          <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+          <mat-spinner 
+            *ngIf="loading" 
+            diameter="20" 
+            style="display: inline-block; margin-right: 8px;">
+          </mat-spinner>
+
+          <mat-icon *ngIf="!loading">{{ isEditMode ? 'save' : 'add' }}</mat-icon>
           {{ isEditMode ? 'Guardar Cambios' : 'Crear Cliente' }}
         </button>
       </mat-card-actions>
@@ -162,7 +216,8 @@
   </mat-card>
 
   <div *ngIf="loading" class="loading-shade">
-    <mat-spinner></mat-spinner>
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>{{ isEditMode ? 'Actualizando...' : 'Creando...' }}</p>
   </div>
 
 </div>
