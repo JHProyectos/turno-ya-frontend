@@ -22,6 +22,7 @@ export class CustomerForm implements OnInit, OnDestroy {
   customerId: string | null = null;
   loading = false;
   error: string | null = null;
+  today: string;
   private subscription = new Subscription();
 
   constructor(
