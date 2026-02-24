@@ -30,7 +30,9 @@ export class CustomerForm implements OnInit, OnDestroy {
     private router: Router,
     private customerService: CustomerService,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+      this.today = new Date().toISOString().split('T')[0];
+  }
 
   ngOnInit(): void {
 
