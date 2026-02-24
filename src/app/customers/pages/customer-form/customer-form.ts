@@ -201,10 +201,10 @@ export class CustomerForm {
       password,
       phone: phone || undefined,
       birth_date: birth_date || undefined,
-      status: 'pending' as const,
-      role: 'customer' as const,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+   //   status: 'pending' as const,
+   //  role: 'customer' as const,
+   //   created_at: new Date().toISOString(),
+   //   updated_at: new Date().toISOString()
     };
   }
 
