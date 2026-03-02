@@ -6,6 +6,7 @@ import { Booking } from '../../shared/booking';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { CommonModule, DatePipe, TitleCasePipe, UpperCasePipe } from '@angular/common';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-booking-detail',
@@ -24,9 +25,10 @@ export class BookingDetail implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private bookingService: BookingService) { }
+    private bookingService: BookingService,
+    private snackBar: MatSnackBar) { }
 
-ngOnInit(): void {
+  ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.loadBooking(id);
@@ -42,7 +44,7 @@ ngOnInit(): void {
           this.booking = data;
           this.loading = false;
         },
-         error: (err: any) => {
+        error: (err: any) => {
           this.error = 'Error al cargar el turno. Por favor, inténtalo de nuevo.';
           this.loading = false;
         },
@@ -52,28 +54,25 @@ ngOnInit(): void {
     );
   }
 
- deleteBooking(id: string): void {
-  if (!id) return;
-  if (!confirm('¿Seguro que querés eliminar este turno?')) return;
-
-  this.loading = true;
-
-  this.bookingService.deleteBooking(id).subscribe({
-    next: () => {
-      this.dataSource = this.dataSource.filter(
-        booking => String(booking.id) !== String(id)
-      );
-      this.loading = false;
-      this.goBack();
-    },
-    error: (err) => {
-      console.error('Error eliminando turno', err);
-      this.error = 'No se pudo eliminar el turno.';
-      this.loading = false;
-    }
-  });
-}
-
+  deleteBooking(id: string) {
+    this.bookingService.deleteBooking(id).subscribe({
+      next: () => {
+        this.router.navigate(['/bookings']);
+      },
+      error: (err) => {
+        if (err.status === 409) {
+          this.snackBar.open(
+            'Solo se pueden eliminar turnos cancelados',
+            'Cerrar',
+            { duration: 4000 }
+          );
+          return;
+        } else {
+          alert('Ocurrió un error inesperado al intentar eliminar el turno');
+        }
+      }
+    });
+  }
 
   goBack(): void {
     this.router.navigate(['/bookings']);

@@ -62,6 +62,7 @@
   justify-content: center;
   align-items: center;
 }
+
 .loading-shade .spinner {
   border: 6px solid #f3f3f3;
   border-top: 6px solid #3f51b5;
@@ -69,4 +70,12 @@
   width: 48px;
   height: 48px;
   animation: spin 1s linear infinite;
+}
+
+.error-message {
+  color: #d32f2f;
+  background-color: #fdecea;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
 }

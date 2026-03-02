@@ -28,7 +28,16 @@ export class BookingForm {
     private route: ActivatedRoute,
     private router: Router,
     private bookingService: BookingService
-  ) {}
+  ) { }
+
+  clients = [
+    { id: 1, name: 'Carlos Martinez' },
+    { id: 2, name: 'Laura Sanchez' },
+    { id: 3, name: 'Pedro Ramirez' },
+    { id: 4, name: 'Marta Diaz' },
+    { id: 5, name: 'Jose Garcia' },
+    { id: 6, name: 'Maria Fernandez' }
+  ];
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -36,12 +45,13 @@ export class BookingForm {
 
   ngOnInit(): void {
     this.bookingForm = this.fb.group({
-      client_name: ['', Validators.required],
+      client_id: ['', Validators.required],
+      client_name: [''],
       service_id: ['', Validators.required],
       booking_date: ['', Validators.required],
       start_time: ['', Validators.required],
-      end_time: [''],
-      booking_status: ['pending', Validators.required]
+      end_time: ['', Validators.required],
+      booking_status: ['', Validators.required]
     });
 
     this.bookingId = this.route.snapshot.paramMap.get('id');
@@ -90,7 +100,19 @@ export class BookingForm {
 
   createBooking(): void {
     this.loading = true;
-    const data = this.bookingForm.value;
+
+    const selectedClient = this.clients.find(
+      c => c.id === this.bookingForm.value.client_id
+    );
+    if (!selectedClient) {
+      this.error = 'Cliente inválido';
+      this.loading = false;
+      return;
+    }
+    const data = {
+      ...this.bookingForm.value,
+      client_name: selectedClient.name
+    };
     console.log('[CREATE] Enviando:', data);
 
     this.subscription.add(
@@ -99,8 +121,8 @@ export class BookingForm {
           this.loading = false;
           if (booking) this.router.navigate(['/bookings', booking.id]);
         },
-        error: () => {
-          this.error = 'Error creando turno';
+        error: (err) => {
+          this.error = err.error?.message || 'Error creando turno';
           this.loading = false;
         }
       })
@@ -141,8 +163,8 @@ export class BookingForm {
           this.loading = false;
           if (ok) this.router.navigate(['/bookings']);
         },
-        error: () => {
-          this.error = 'Error eliminando turno';
+        error: (err) => {
+          this.error = err.error?.message || 'Error eliminando turno';
           this.loading = false;
         }
       })

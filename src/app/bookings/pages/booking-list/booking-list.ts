@@ -5,6 +5,7 @@ import { Booking } from '../../shared/booking';
 import { BookingService } from '../../shared/booking.service';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-booking-list',
@@ -20,7 +21,16 @@ export class BookingListComponent implements OnInit {
   loading = true;
   error: string | null = null;
 
-  constructor(private bookingService: BookingService) { }
+  constructor(private bookingService: BookingService,
+    private snackBar: MatSnackBar
+  ) { }
+
+  private showError(message: string): void {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 3500,
+      panelClass: ['snackbar-error']
+    });
+  }
 
   ngOnInit(): void {
     this.loadBookings();
@@ -51,8 +61,14 @@ export class BookingListComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error eliminando el turno', err);
-          this.error = 'No se pudo eliminar el turno.';
+
           this.loading = false;
+
+          if (err.status === 409) {
+            this.showError('Solo se pueden eliminar turnos cancelados');
+          } else {
+            alert('Ocurrió un error inesperado al intentar eliminar el turno');
+          }
         },
       });
     }

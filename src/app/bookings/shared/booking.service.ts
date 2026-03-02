@@ -26,7 +26,7 @@ export class BookingService {
   }
 
   getBookings(): Observable<Booking[]> {
-  const url = `${this.apiBase}`;
+  const url = `${this.apiBase}/all`;
   return this.http.get<any>(url).pipe(
     map(response => this.normalizeBookingsArray(response)),
     catchError(err => {

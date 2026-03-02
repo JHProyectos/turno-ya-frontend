@@ -12,8 +12,12 @@
     </button>
   </header>
 
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+  
   <mat-card class="modern-card mat-elevation-z3">
-
+    
     <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()" class="modern-form">
 
       <!-- Datos Reserva -->
@@ -23,9 +27,13 @@
         <div class="form-grid">
 
           <!-- Cliente -->
-          <mat-form-field appearance="outline">
-            <mat-label>Cliente ID</mat-label>
-            <input matInput type="number" formControlName="client_id" required>
+          <mat-form-field appearance="fill">
+            <mat-label>Cliente</mat-label>
+            <mat-select formControlName="client_id">
+              <mat-option *ngFor="let c of clients" [value]="c.id">
+                {{ c.name }}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
 
           <!-- Servicio -->
