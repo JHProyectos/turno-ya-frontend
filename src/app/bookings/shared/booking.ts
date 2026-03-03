@@ -3,6 +3,7 @@ export interface Booking {
   client_id: number;
   client_name: string;
   service_id: number;
+  service_name: string;
   booking_date: Date;
   start_time: string;
   end_time: string;

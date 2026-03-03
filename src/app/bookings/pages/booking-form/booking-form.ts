@@ -39,6 +39,14 @@ export class BookingForm {
     { id: 6, name: 'Maria Fernandez' }
   ];
 
+  services = [
+    { id: 1, name: 'Servicio 1' },
+    { id: 2, name: 'Servicio 2' },
+    { id: 3, name: 'Servicio 3' },
+    { id: 4, name: 'Servicio 4' },
+    { id: 5, name: 'Servicio 5' }
+  ];
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
@@ -48,6 +56,7 @@ export class BookingForm {
       client_id: ['', Validators.required],
       client_name: [''],
       service_id: ['', Validators.required],
+      service_name: [''],
       booking_date: ['', Validators.required],
       start_time: ['', Validators.required],
       end_time: ['', Validators.required],
@@ -72,6 +81,7 @@ export class BookingForm {
             this.bookingForm.patchValue({
               client_name: booking.client_name,
               service_id: booking.service_id,
+              service_name: booking.service_name,
               booking_date: new Date(booking.booking_date).toISOString().split('T')[0],
               start_time: booking.start_time,
               end_time: booking.end_time,
@@ -109,9 +119,18 @@ export class BookingForm {
       this.loading = false;
       return;
     }
+    const selectedService = this.services.find(
+      s => s.id === this.bookingForm.value.service_id
+    );
+    if (!selectedService) {
+      this.error = 'Servicio inválido';
+      this.loading = false;
+      return;
+    }
     const data = {
       ...this.bookingForm.value,
-      client_name: selectedClient.name
+      client_name: selectedClient.name,
+      service_name: selectedService.name
     };
     console.log('[CREATE] Enviando:', data);
 

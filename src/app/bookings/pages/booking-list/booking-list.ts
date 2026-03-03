@@ -16,7 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class BookingListComponent implements OnInit {
 
-  displayedColumns: string[] = ['client_name', 'service_id', 'booking_date', 'start_time', 'booking_status', 'actions'];
+  displayedColumns: string[] = ['client_name', 'service_name', 'booking_date', 'start_time', 'booking_status', 'actions'];
   dataSource: Booking[] = [];
   loading = true;
   error: string | null = null;
