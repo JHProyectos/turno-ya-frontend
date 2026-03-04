@@ -9,7 +9,7 @@ import { CreateCustomerDTO, UpdateCustomerDTO } from './customer.dto';
   providedIn: 'root'
 })
 export class CustomerService {
-
+  
   private apiBase = 'http://localhost:3000/api/customers';
 
   constructor(private http: HttpClient) {}
@@ -49,7 +49,6 @@ export class CustomerService {
     );
   }
 
-  // ✅ CORREGIDO
   addCustomer(data: CreateCustomerDTO): Observable<Customer | null> {
     return this.http.post<any>(this.apiBase, data).pipe(
       map(res => {
@@ -63,7 +62,6 @@ export class CustomerService {
     );
   }
 
-  // ✅ CORREGIDO
   updateCustomer(id: string, data: UpdateCustomerDTO): Observable<Customer | null> {
     return this.http.put<any>(`${this.apiBase}/${id}`, data).pipe(
       map(res => {

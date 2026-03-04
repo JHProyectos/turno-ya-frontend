@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-booking-detail',
-  imports: [MaterialModule, RouterModule, TitleCasePipe, UpperCasePipe, DatePipe, CommonModule],
+  imports: [MaterialModule, RouterModule, UpperCasePipe, DatePipe, CommonModule],
   templateUrl: './booking-detail.html',
   styleUrl: './booking-detail.css',
 })

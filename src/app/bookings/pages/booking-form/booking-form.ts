@@ -6,7 +6,10 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BookingService } from '../../shared/booking.service';
 import { CommonModule } from '@angular/common';
-
+import { CustomerService } from '../../../customers/shared/customer.service';
+import { ServiceService } from '../../../services/shared/service.service';
+import { Service } from '../../../services/shared/service.interface';
+import { Customer } from '../../../customers/shared/customer';
 @Component({
   standalone: true,
   selector: 'app-booking-form',
@@ -27,31 +30,28 @@ export class BookingForm {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private bookingService: BookingService
+    private bookingService: BookingService,
+    private customerService: CustomerService,
+    private serviceService: ServiceService
   ) { }
 
-  clients = [
-    { id: 1, name: 'Carlos Martinez' },
-    { id: 2, name: 'Laura Sanchez' },
-    { id: 3, name: 'Pedro Ramirez' },
-    { id: 4, name: 'Marta Diaz' },
-    { id: 5, name: 'Jose Garcia' },
-    { id: 6, name: 'Maria Fernandez' }
-  ];
+  clients: Customer[] = [];
 
-  services = [
-    { id: 1, name: 'Servicio 1' },
-    { id: 2, name: 'Servicio 2' },
-    { id: 3, name: 'Servicio 3' },
-    { id: 4, name: 'Servicio 4' },
-    { id: 5, name: 'Servicio 5' }
-  ];
+  services: Service[] = [];
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
   ngOnInit(): void {
+
+    this.subscription.add(
+      this.customerService.getCustomers().subscribe(data => this.clients = data)
+    );
+    this.subscription.add(
+      this.serviceService.getServices().subscribe(data => this.services = data)
+    );
+
     this.bookingForm = this.fb.group({
       client_id: ['', Validators.required],
       client_name: [''],
@@ -129,7 +129,7 @@ export class BookingForm {
     }
     const data = {
       ...this.bookingForm.value,
-      client_name: selectedClient.name,
+      client_name: selectedClient.first_name,
       service_name: selectedService.name
     };
     console.log('[CREATE] Enviando:', data);
