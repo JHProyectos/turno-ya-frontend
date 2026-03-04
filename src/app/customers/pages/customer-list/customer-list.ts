@@ -22,7 +22,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class CustomerList implements OnInit {
 
-  displayedColumns: string[] = ['name', 'email', 'status', 'actions'];
+  displayedColumns: string[] = ['name', 'email', 'actions'];
   dataSource: Customer[] = [];
   loading = true;
   error: string | null = null;

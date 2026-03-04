@@ -15,18 +15,6 @@
       <mat-card-title>
         {{ c.first_name }} {{ c.last_name }}
       </mat-card-title>
-      <mat-card-subtitle>
-        {{ c.role | titlecase }} - Estado:
-        <span
-          [ngClass]="{
-            'status-approved': c.status === 'approved',
-            'status-pending': c.status === 'pending',
-            'status-rejected': c.status === 'rejected'
-          }"
-        >
-          {{ c.status | uppercase }}
-        </span>
-      </mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
