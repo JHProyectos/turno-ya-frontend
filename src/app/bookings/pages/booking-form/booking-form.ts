@@ -79,7 +79,7 @@ export class BookingForm {
         next: (booking: Booking | null) => {
           if (booking) {
             this.bookingForm.patchValue({
-              client_id: booking.client_id,
+              client_id: String(booking.client_id),
               service_id: booking.service_id,
               service_name: booking.service_name,
               booking_date: new Date(booking.booking_date).toISOString().split('T')[0],
