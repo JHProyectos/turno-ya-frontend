@@ -79,7 +79,7 @@ export class BookingForm {
         next: (booking: Booking | null) => {
           if (booking) {
             this.bookingForm.patchValue({
-              client_name: booking.client_name,
+              client_id: booking.client_id,
               service_id: booking.service_id,
               service_name: booking.service_name,
               booking_date: new Date(booking.booking_date).toISOString().split('T')[0],
@@ -119,6 +119,7 @@ export class BookingForm {
       this.loading = false;
       return;
     }
+
     const selectedService = this.services.find(
       s => s.id === this.bookingForm.value.service_id
     );
@@ -127,12 +128,12 @@ export class BookingForm {
       this.loading = false;
       return;
     }
+
     const data = {
       ...this.bookingForm.value,
-      client_name: selectedClient.first_name,
+      client_name: selectedClient.name, 
       service_name: selectedService.name
     };
-    console.log('[CREATE] Enviando:', data);
 
     this.subscription.add(
       this.bookingService.addBooking(data).subscribe({
@@ -148,39 +149,17 @@ export class BookingForm {
     );
   }
 
-  updateExistingBooking(): void {
-    if (!this.bookingId) return;
-
-    this.loading = true;
-    const data = this.bookingForm.value;
-    console.log('[UPDATE] ID:', this.bookingId, 'Data:', data);
-
-    this.subscription.add(
-      this.bookingService.updateBooking(this.bookingId, data).subscribe({
-        next: (booking) => {
-          this.loading = false;
-          if (booking) this.router.navigate(['/bookings', booking.id]);
-        },
-        error: () => {
-          this.error = 'Error actualizando turno';
-          this.loading = false;
-        }
-      })
-    );
-  }
-
   deleteBooking(): void {
     if (!this.bookingId) return;
-
     if (!confirm('¿Seguro que deseas eliminar el turno?')) return;
 
     this.loading = true;
 
     this.subscription.add(
       this.bookingService.deleteBooking(this.bookingId).subscribe({
-        next: (ok) => {
+        next: (result) => {                          
           this.loading = false;
-          if (ok) this.router.navigate(['/bookings']);
+          if (result.success) this.router.navigate(['/bookings']); 
         },
         error: (err) => {
           this.error = err.error?.message || 'Error eliminando turno';
@@ -189,6 +168,30 @@ export class BookingForm {
       })
     );
   }
+
+  updateExistingBooking(): void {
+  if (!this.bookingId) return;
+
+  this.loading = true;
+  const { client_name, service_name, ...data } = this.bookingForm.value;
+  
+  console.log('[UPDATE] ID:', this.bookingId, 'Data:', JSON.stringify(data));
+
+  this.subscription.add(
+    this.bookingService.updateBooking(this.bookingId, data).subscribe({
+      next: (booking) => {
+        this.loading = false;
+        if (booking) this.router.navigate(['/bookings', booking.id]);
+      },
+      error: (err) => {
+        this.error = err.error?.error?.message || 'Error actualizando turno'; 
+        this.loading = false;
+      }
+    })
+  );
+}
+
+
 
   onCancel(): void {
     this.router.navigate(['/bookings']);

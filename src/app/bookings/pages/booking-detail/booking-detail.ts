@@ -54,25 +54,24 @@ export class BookingDetail implements OnInit, OnDestroy {
     );
   }
 
-  deleteBooking(id: string) {
-    this.bookingService.deleteBooking(id).subscribe({
-      next: () => {
+  deleteBooking(id: string): void {
+  this.bookingService.deleteBooking(id).subscribe({
+    next: (result) => {
+      if (result.success) {
         this.router.navigate(['/bookings']);
-      },
-      error: (err) => {
-        if (err.status === 409) {
-          this.snackBar.open(
-            'Solo se pueden eliminar turnos cancelados',
-            'Cerrar',
-            { duration: 4000 }
-          );
-          return;
-        } else {
-          alert('Ocurrió un error inesperado al intentar eliminar el turno');
-        }
+        return;
       }
-    });
-  }
+      if (result.status === 409) {
+        this.snackBar.open('Solo se pueden eliminar turnos cancelados', 'Cerrar', { duration: 4000 });
+      } else {
+        this.snackBar.open('Error inesperado al eliminar el turno', 'Cerrar', { duration: 4000 });
+      }
+    },
+    error: (err) => {
+      this.snackBar.open('Error de conexión al intentar eliminar', 'Cerrar', { duration: 4000 });
+    }
+  });
+}
 
   goBack(): void {
     this.router.navigate(['/bookings']);

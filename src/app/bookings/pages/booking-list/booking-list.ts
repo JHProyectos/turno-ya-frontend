@@ -52,25 +52,29 @@ export class BookingListComponent implements OnInit {
   }
 
   deleteBooking(id: string): void {
-    if (confirm('¿Seguro que querés eliminar este turno?')) {
-      this.loading = true;
-      this.bookingService.deleteBooking(id).subscribe({
-        next: () => {
-          this.dataSource = this.dataSource.filter(b => String(b.id) !== String(id));
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error('Error eliminando el turno', err);
+  if (!confirm('¿Seguro que querés eliminar este turno?')) return;
 
-          this.loading = false;
-
-          if (err.status === 409) {
-            this.showError('Solo se pueden eliminar turnos cancelados');
-          } else {
-            alert('Ocurrió un error inesperado al intentar eliminar el turno');
-          }
-        },
-      });
+  this.loading = true;
+  this.bookingService.deleteBooking(id).subscribe({
+    next: (result) => {
+      this.loading = false;
+      if (result.success) {
+        this.dataSource = this.dataSource.filter(b => String(b.id) !== String(id));
+        return;
+      }
+      if (result.status === 409) {
+        this.showError('Solo se pueden eliminar turnos cancelados');
+      } else {
+        this.showError('Error inesperado al intentar eliminar el turno');
+      }
+    },
+    error: (err) => {
+      this.loading = false;
+      this.showError('Error de conexión al intentar eliminar');
     }
-  }
+  });
+}
+
+
+
 }

@@ -7,7 +7,6 @@ import { map, catchError } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-
 export class BookingService {
   private apiBase = 'http://localhost:3000/api/bookings';
 
@@ -26,19 +25,17 @@ export class BookingService {
   }
 
   getBookings(): Observable<Booking[]> {
-  const url = `${this.apiBase}/all`;
-  return this.http.get<any>(url).pipe(
-    map(response => this.normalizeBookingsArray(response)),
-    catchError(err => {
-      console.error('[BookingService] getBookings error', err);
-      return of([]);
-    })
-  );
-}
+    return this.http.get<any>(`${this.apiBase}/all`).pipe(
+      map(response => this.normalizeBookingsArray(response)),
+      catchError(err => {
+        console.error('[BookingService] getBookings error', err);
+        return of([]);
+      })
+    );
+  }
 
   getBooking(id: string): Observable<Booking | null> {
-    const url = `${this.apiBase}/${id}`;
-    return this.http.get<any>(url).pipe(
+    return this.http.get<any>(`${this.apiBase}/${id}`).pipe(
       map(res => {
         const payload = res?.data ?? res;
         return payload ? this.normalizeBooking(payload) : null;
@@ -51,34 +48,35 @@ export class BookingService {
   }
 
   addBooking(booking: Omit<Booking, 'id'>): Observable<Booking | null> {
-    const url = `${this.apiBase}`;
-    return this.http.post<any>(url, booking).pipe(
+    return this.http.post<any>(this.apiBase, booking).pipe(
       map(res => this.normalizeBooking(res?.data ?? res)),
       catchError(err => {
         console.error('[BookingService] addBooking error', err);
-        return of(null);
+        throw err; 
       })
     );
   }
 
   updateBooking(id: string, booking: Partial<Booking>): Observable<Booking | null> {
-    const url = `${this.apiBase}/${id}`;
-    return this.http.put<any>(url, booking).pipe(
+    return this.http.put<any>(`${this.apiBase}/${id}`, booking).pipe(
       map(res => this.normalizeBooking(res?.data ?? res)),
       catchError(err => {
         console.error('[BookingService] updateBooking error', err);
-        return of(null);
+        throw err; 
       })
     );
   }
 
-  deleteBooking(id: string): Observable<boolean> {
-    const url = `${this.apiBase}/${id}`;
-    return this.http.delete<void>(url).pipe(
-      map(() => true),
+  deleteBooking(id: string): Observable<{ success: boolean; status: number }> {
+    
+    return this.http.delete(this.apiBase + `/${id}`, { observe: 'response' }).pipe(
+      map(res => ({
+        success: res.status === 204,
+        status: res.status
+      })),
       catchError(err => {
         console.error('[BookingService] deleteBooking error', err);
-        return of(false);
+        return of({ success: false, status: err.status });
       })
     );
   }
